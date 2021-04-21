@@ -1,0 +1,1757 @@
+function onOpen(event)
+{
+  var ui1= SpreadsheetApp.getUi();
+  var menu=ui1.createMenu("Prikaz programa");
+ 
+  menu.addItem("Prikaz dana za trening klijenta", "dani");
+  menu.addItem("Dodaj jos jednu nedelju treninga", "dodajJednuNedelju1");
+  menu.addItem("Dodaj jos dve nedelje treninga", "dodajDveNedelje1");
+  menu.addItem("Posalji program treninga klijentu", "createNewGoogleDocs2FROMTemplate");
+  menu.addItem("Napravi program treninga", "kreirajDokument");
+  menu.addItem("Postavi podsetnik za novu nedelju treninga", "setujObavestenjaKalendar1");
+  menu.addItem("Posalji mejlove o uplatama", "posaljiMejlUplataRacun");
+  menu.addItem("Postavi treninge klijenata u kalendar admina", "createCalendarEvent");
+  menu.addItem("Izracunaj km i pace-INTERVAL1", "interval1"); 
+   menu.addItem("Km i pace-INTERVAL2", "interval2"); 
+    menu.addItem("Km i pace-INTERVAL3", "interval3"); 
+     menu.addItem("Km i pace-INTERVAL4", "interval4"); 
+      menu.addItem("Km i pace-SETINTERVAL1", "setInterval"); 
+  
+
+  
+  menu.addToUi();
+}
+function dodajJednuNedelju1() 
+{
+  var tt = SpreadsheetApp.getActiveSpreadsheet();
+ 
+  var klijent = tt.getSheetByName("Treninzi");
+ 
+  var lastRow = klijent.getLastRow();
+  // Postavljamo opseg polja, broj polja mora da se slaze sa brojem parametara
+  
+  
+  var i=lastRow+1;
+ 
+ var datum1=klijent.getRange("A"+lastRow).getValue();
+      
+ var nedeljaPoRedu=2;
+    // @ts-ignore
+    var d= new Date(datum1);
+  for(i=lastRow; i<=lastRow+7; i++)
+  { 
+  
+    var plus=i+1;
+    if(i==lastRow)
+    {
+     
+     var n4 = "+1 nedelja";
+     var nn4 = klijent.getRange("B"+plus).setValue(n4);
+     nn4.setBackground('#7FFFD4');
+     nn4.setFontWeight('Bold');
+ 
+    var dodatna = klijent.getRange("A"+plus);
+     dodatna.setBackground('#7FFFD4');
+     
+    }
+    
+      if(i==lastRow+1)
+    {
+      
+     var pon = "Ponedeljak";
+     var p = klijent.getRange("B"+plus).setValue(pon);
+     p.setBackground('#FFB6C1');
+     var pg = klijent.getRange("A"+plus);
+     pg.setBackground('#FFB6C1');
+ 
+var nextDate1 = new Date(d.getTime()+(1)*3600000*24);
+        //nextDate1.setDate(d.getDate()+1);
+        //var stringDate = Utilities.formatDate(nextDate1, tz, 'MM-dd-yy');
+         //var stringDate = Utilities.formatDate(nextDate1, "GMT+1", "dd/MM/yyyy");
+         var pocetakTreninga=klijent.getRange(i+1,1).setValue(nextDate1); 
+      }    
+      if(i==lastRow+2)
+    {
+      
+     var uto = "Utorak";
+     var u = klijent.getRange("B"+plus).setValue(uto);
+     u.setBackground('#FFB6C1');
+     var pg = klijent.getRange("A"+plus);
+      pg.setBackground('#FFB6C1');
+      
+       var nextDate1 = new Date(d.getTime()+(2)*3600000*24);
+        //nextDate1.setDate(d.getDate()+2);
+        //var stringDate = Utilities.formatDate(nextDate1, tz, 'MM-dd-yy');
+        //var stringDate = Utilities.formatDate(nextDate1, "GMT+1", "dd/MM/yyyy");
+         var pocetakTreninga=klijent.getRange(i+1,1).setValue(nextDate1);
+    }
+     if(i==lastRow+3)
+    {
+     var sre = "Sreda";
+     var s = klijent.getRange("B"+plus).setValue(sre);
+     s.setBackground('#FFB6C1');
+ 
+     var pg = klijent.getRange("A"+plus);
+        pg.setBackground('#FFB6C1');
+         var nextDate1 = new Date(d.getTime()+(3)*3600000*24);      
+         var pocetakTreninga=klijent.getRange(i+1,1).setValue(nextDate1);
+    }
+      if(i==lastRow+4)
+    {
+     var cet = "Cetvrtak";
+     var c = klijent.getRange("B"+plus).setValue(cet);
+     c.setBackground('#FFB6C1');
+ 
+     var pg = klijent.getRange("A"+plus);
+        pg.setBackground('#FFB6C1');
+        // var nextDate1 = new Date(d.getTime()+(4)*3600000*24);
+        nextDate1.setDate(d.getDate()+4);
+        //var stringDate = Utilities.formatDate(nextDate1, tz, 'MM-dd-yy');
+         //var stringDate = Utilities.formatDate(nextDate1, "GMT+1", "dd/MM/yyyy");
+         var pocetakTreninga=klijent.getRange(i+1,1).setValue(nextDate1);
+    }
+      if(i==lastRow+5)
+    {
+     var pet = "Petak";
+     var pp = klijent.getRange("B"+plus).setValue(pet);
+     pp.setBackground('#FFB6C1');
+     var pg = klijent.getRange("A"+plus);
+        pg.setBackground('#FFB6C1');
+         var nextDate1 = new Date(d.getTime()+(5)*3600000*24);
+        //nextDate1.setDate(d.getDate()+5);
+        //var stringDate = Utilities.formatDate(nextDate1, tz, 'MM-dd-yy');
+         //var stringDate = Utilities.formatDate(nextDate1, "GMT+1", "dd/MM/yyyy");
+         var pocetakTreninga=klijent.getRange(i+1,1).setValue(nextDate1);
+    }
+      if(i==lastRow+6)
+    {
+     var sub = "Subota";
+     var sss = klijent.getRange("B"+plus).setValue(sub);
+     sss.setBackground('#FFB6C1');
+     var pg = klijent.getRange("A"+plus);
+        pg.setBackground('#FFB6C1');
+         var nextDate1 = new Date(d.getTime()+(6)*3600000*24);
+        //nextDate1.setDate(d.getDate()+6);
+        //var stringDate = Utilities.formatDate(nextDate1, tz, 'MM-dd-yy');
+         //var stringDate = Utilities.formatDate(nextDate1, "GMT+1", "dd/MM/yyyy");
+         var pocetakTreninga=klijent.getRange(i+1,1).setValue(nextDate1);
+    }
+     if(i==lastRow+7)
+    {
+     var ned = "Nedelja";
+     var nedd = klijent.getRange("B"+plus).setValue(ned);
+     nedd.setBackground('#FFB6C1');
+     var pg = klijent.getRange("A"+plus);
+        pg.setBackground('#FFB6C1');
+         var nextDate1 = new Date(d.getTime()+(7)*3600000*24);
+        //nextDate1.setDate(d.getDate()+7);
+        //var stringDate = Utilities.formatDate(nextDate1, tz, 'MM-dd-yy');
+         //var stringDate = Utilities.formatDate(nextDate1, "GMT+1", "dd/MM/yyyy");
+         var pocetakTreninga=klijent.getRange(i+1,1).setValue(nextDate1);
+    }
+      
+  }
+         
+}
+function dodajDveNedelje1() 
+{
+  var tt = SpreadsheetApp.getActiveSpreadsheet();
+ 
+  var klijent = tt.getSheetByName("Treninzi");
+ 
+  var lastRow = klijent.getLastRow();
+  // Postavljamo opseg polja, broj polja mora da se slaze sa brojem parametara
+  
+  
+  var i=lastRow+1;
+ 
+ var datum1=klijent.getRange("A"+lastRow).getValue();
+      
+ var nedeljaPoRedu=2;
+    // @ts-ignore
+    var d= new Date(datum1);
+  for(i=lastRow; i<=lastRow+15; i++)
+  {  
+    var plus=i+1;
+    if(i==lastRow)
+    {
+     var n4 = "+2 nedelje(prva ned)";
+     var nn4 = klijent.getRange("B"+plus).setValue(n4);
+     nn4.setBackground('#7FFFD4');
+     nn4.setFontWeight('Bold');
+ 
+    var dodatna = klijent.getRange("A"+plus);
+     dodatna.setBackground('#7FFFD4');
+    }
+      if(i==lastRow+1)
+    {
+      
+     var pon = "Ponedeljak";
+     var p = klijent.getRange("B"+plus).setValue(pon);
+     p.setBackground('#FFB6C1');
+ 
+   var nextDate1 = new Date(d.getTime()+(1)*3600000*24);
+        //nextDate1.setDate(d.getDate()+1);
+        //var stringDate = Utilities.formatDate(nextDate1, tz, 'MM-dd-yy');
+         //var stringDate = Utilities.formatDate(nextDate1, "GMT+1", "dd/MM/yyyy");
+         var pocetakTreninga=klijent.getRange(i+1,1).setValue(nextDate1);
+   
+        var pg = klijent.getRange("A"+plus);
+        pg.setBackground('#FFB6C1');
+      }
+     
+    
+      if(i==lastRow+2)
+    {
+      
+     var uto = "Utorak";
+     var u = klijent.getRange("B"+plus).setValue(uto);
+     u.setBackground('#FFB6C1');
+     var pg = klijent.getRange("A"+plus);
+      pg.setBackground('#FFB6C1');
+      
+       var nextDate1 = new Date(d.getTime()+(2)*3600000*24);
+        //nextDate1.setDate(d.getDate()+2);
+        //var stringDate = Utilities.formatDate(nextDate1, tz, 'MM-dd-yy');
+        //var stringDate = Utilities.formatDate(nextDate1, "GMT+1", "dd/MM/yyyy");
+         var pocetakTreninga=klijent.getRange(i+1,1).setValue(nextDate1);
+    }
+     if(i==lastRow+3)
+    {
+     var sre = "Sreda";
+     var s = klijent.getRange("B"+plus).setValue(sre);
+     s.setBackground('#FFB6C1');
+ 
+     var pg = klijent.getRange("A"+plus);
+        pg.setBackground('#FFB6C1');
+         var nextDate1 = new Date(d.getTime()+(3)*3600000*24);
+       // nextDate1.setDate(d.getDate()+3);
+        //var stringDate = Utilities.formatDate(nextDate1, tz, 'MM-dd-yy');
+         //var stringDate = Utilities.formatDate(nextDate1, "GMT+1", "dd/MM/yyyy");
+         var pocetakTreninga=klijent.getRange(i+1,1).setValue(nextDate1);
+    }
+      if(i==lastRow+4)
+    {
+     var cet = "Cetvrtak";
+     var c = klijent.getRange("B"+plus).setValue(cet);
+     c.setBackground('#FFB6C1');
+ 
+     var pg = klijent.getRange("A"+plus);
+        pg.setBackground('#FFB6C1');
+        var nextDate1 = new Date(d.getTime()+(4)*3600000*24);
+        //nextDate1.setDate(d.getDate()+4);
+        //var stringDate = Utilities.formatDate(nextDate1, tz, 'MM-dd-yy');
+         //var stringDate = Utilities.formatDate(nextDate1, "GMT+1", "dd/MM/yyyy");
+         var pocetakTreninga=klijent.getRange(i+1,1).setValue(nextDate1);
+    }
+      if(i==lastRow+5)
+    {
+     var pet = "Petak";
+     var pp = klijent.getRange("B"+plus).setValue(pet);
+     pp.setBackground('#FFB6C1');
+     var pg = klijent.getRange("A"+plus);
+        pg.setBackground('#FFB6C1');
+         var nextDate1 = new Date(d.getTime()+(5)*3600000*24);
+        //nextDate1.setDate(d.getDate()+5);
+        //var stringDate = Utilities.formatDate(nextDate1, tz, 'MM-dd-yy');
+         //var stringDate = Utilities.formatDate(nextDate1, "GMT+1", "dd/MM/yyyy");
+         var pocetakTreninga=klijent.getRange(i+1,1).setValue(nextDate1);
+    }
+      if(i==lastRow+6)
+    {
+     var sub = "Subota";
+     var sss = klijent.getRange("B"+plus).setValue(sub);
+     sss.setBackground('#FFB6C1');
+     var pg = klijent.getRange("A"+plus);
+        pg.setBackground('#FFB6C1');
+         var nextDate1 = new Date(d.getTime()+(6)*3600000*24);
+        //nextDate1.setDate(d.getDate()+6);
+        //var stringDate = Utilities.formatDate(nextDate1, tz, 'MM-dd-yy');
+         //var stringDate = Utilities.formatDate(nextDate1, "GMT+1", "dd/MM/yyyy");
+         var pocetakTreninga=klijent.getRange(i+1,1).setValue(nextDate1);
+    }
+     if(i==lastRow+7)
+    {
+     var ned = "Nedelja";
+     var nedd = klijent.getRange("B"+plus).setValue(ned);
+     nedd.setBackground('#FFB6C1');
+     var pg = klijent.getRange("A"+plus);
+        pg.setBackground('#FFB6C1');
+         var nextDate1 = new Date(d.getTime()+(7)*3600000*24);
+        //nextDate1.setDate(d.getDate()+7);
+        //var stringDate = Utilities.formatDate(nextDate1, tz, 'MM-dd-yy');
+         //var stringDate = Utilities.formatDate(nextDate1, "GMT+1", "dd/MM/yyyy");
+         var pocetakTreninga=klijent.getRange(i+1,1).setValue(nextDate1);
+    }
+    if(i==lastRow+8)
+    {
+  
+     var n4 = "+2 nedelje(druga ned)";
+     var nn4 = klijent.getRange("B"+plus).setValue(n4);
+     nn4.setBackground('#7FFFD4');
+     nn4.setFontWeight('Bold');
+ 
+    var dodatna = klijent.getRange("A"+plus);
+     dodatna.setBackground('#7FFFD4');
+     
+    }
+       if(i==lastRow+9)
+    {
+      
+     var pon = "Ponedeljak";
+     var p = klijent.getRange("B"+plus).setValue(pon);
+     p.setBackground('#FFB6C1');
+ 
+ 
+      var nextDate1 = new Date(d.getTime()+(8)*3600000*24);
+         var pocetakTreninga=klijent.getRange(i+1,1).setValue(nextDate1);
+   
+        var pg = klijent.getRange("A"+plus);
+        pg.setBackground('#FFB6C1');
+      }
+     
+    
+      if(i==lastRow+10)
+    {
+      
+     var uto = "Utorak";
+     var u = klijent.getRange("B"+plus).setValue(uto);
+     u.setBackground('#FFB6C1');
+     var pg = klijent.getRange("A"+plus);
+      pg.setBackground('#FFB6C1');
+      
+       var nextDate1 = new Date(d.getTime()+(9)*3600000*24);
+        //nextDate1.setDate(d.getDate()+2);
+        //var stringDate = Utilities.formatDate(nextDate1, tz, 'MM-dd-yy');
+        //var stringDate = Utilities.formatDate(nextDate1, "GMT+1", "dd/MM/yyyy");
+         var pocetakTreninga=klijent.getRange(i+1,1).setValue(nextDate1);
+    }
+     if(i==lastRow+11)
+    {
+     var sre = "Sreda";
+     var s = klijent.getRange("B"+plus).setValue(sre);
+     s.setBackground('#FFB6C1');
+ 
+     var pg = klijent.getRange("A"+plus);
+        pg.setBackground('#FFB6C1');
+         var nextDate1 = new Date(d.getTime()+(10)*3600000*24);
+       // nextDate1.setDate(d.getDate()+3);
+        //var stringDate = Utilities.formatDate(nextDate1, tz, 'MM-dd-yy');
+         //var stringDate = Utilities.formatDate(nextDate1, "GMT+1", "dd/MM/yyyy");
+         var pocetakTreninga=klijent.getRange(i+1,1).setValue(nextDate1);
+    }
+      if(i==lastRow+12)
+    {
+     var cet = "Cetvrtak";
+     var c = klijent.getRange("B"+plus).setValue(cet);
+     c.setBackground('#FFB6C1');
+ 
+     var pg = klijent.getRange("A"+plus);
+        pg.setBackground('#FFB6C1');
+        var nextDate1 = new Date(d.getTime()+(11)*3600000*24);
+        //nextDate1.setDate(d.getDate()+4);
+        //var stringDate = Utilities.formatDate(nextDate1, tz, 'MM-dd-yy');
+         //var stringDate = Utilities.formatDate(nextDate1, "GMT+1", "dd/MM/yyyy");
+         var pocetakTreninga=klijent.getRange(i+1,1).setValue(nextDate1);
+    }
+      if(i==lastRow+13)
+    {
+     var pet = "Petak";
+     var pp = klijent.getRange("B"+plus).setValue(pet);
+     pp.setBackground('#FFB6C1');
+     var pg = klijent.getRange("A"+plus);
+        pg.setBackground('#FFB6C1');
+         var nextDate1 = new Date(d.getTime()+(12)*3600000*24);
+        //nextDate1.setDate(d.getDate()+5);
+        //var stringDate = Utilities.formatDate(nextDate1, tz, 'MM-dd-yy');
+         //var stringDate = Utilities.formatDate(nextDate1, "GMT+1", "dd/MM/yyyy");
+         var pocetakTreninga=klijent.getRange(i+1,1).setValue(nextDate1);
+    }
+      if(i==lastRow+14)
+    {
+     var sub = "Subota";
+     var sss = klijent.getRange("B"+plus).setValue(sub);
+     sss.setBackground('#FFB6C1');
+     var pg = klijent.getRange("A"+plus);
+        pg.setBackground('#FFB6C1');
+         var nextDate1 = new Date(d.getTime()+(13)*3600000*24);
+        //nextDate1.setDate(d.getDate()+6);
+        //var stringDate = Utilities.formatDate(nextDate1, tz, 'MM-dd-yy');
+         //var stringDate = Utilities.formatDate(nextDate1, "GMT+1", "dd/MM/yyyy");
+         var pocetakTreninga=klijent.getRange(i+1,1).setValue(nextDate1);
+    }
+     if(i==lastRow+15)
+    {
+     var ned = "Nedelja";
+     var nedd = klijent.getRange("B"+plus).setValue(ned);
+     nedd.setBackground('#FFB6C1');
+     var pg = klijent.getRange("A"+plus);
+        pg.setBackground('#FFB6C1');
+         var nextDate1 = new Date(d.getTime()+(14)*3600000*24);
+        //nextDate1.setDate(d.getDate()+7);
+        //var stringDate = Utilities.formatDate(nextDate1, tz, 'MM-dd-yy');
+         //var stringDate = Utilities.formatDate(nextDate1, "GMT+1", "dd/MM/yyyy");
+         var pocetakTreninga=klijent.getRange(i+1,1).setValue(nextDate1);
+    }
+      
+  }
+         
+}
+
+
+function interval1()
+{
+  //interval1, 2k zagrevanje@6:30 + 2x(0.5km@5:30+0.5km@5:40) + 2k hlađenje@6:30
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+    var trening = ss.getSheetByName("Treninzi");
+    var lastRow = trening.getLastRow();
+
+   for(var j = 3; j<=lastRow; j++)
+  {
+    var text=trening.getRange(j,6).getValue();
+    var duzina=text.length;
+    for(var i=0;i<duzina;i++)
+    {
+      var brojac=0;
+      var tip;
+      var prvi;
+      var drugi;
+      var prvi1;
+      var k;
+      var vreme;
+      var treci;
+      var cetvrti;
+      var lel;
+      var put;
+
+//////interval1, 2k zagrevanje@6:30 + 2x(0.5km@5:30+0.5km@5:40) + 2k hlađenje@6:30
+
+ if (tip=text.split(", ")[[0]]=="interval1")
+      {
+        var duzina1=duzina-10;
+        
+        prvi=text.split(", ")[[1]]; 
+         drugi=prvi.split("+ ")[[0]];  
+         treci=prvi.split("+ ")[[1]]; 
+        cetvrti=prvi.split("+ ")[[2]]; 
+         var put1=drugi.split("k")[[0]]; 
+         //vreme koje se koristi za izracunavanje
+       
+       //ovo sto sledi je brzina, preracunavaju se sekundi u minute
+        vreme=drugi.split("@")[[1]]; //6:30
+        var vreme1=vreme.split(":")[[0]]; //6
+        var vreme2=vreme.split(":")[[1]]; //6
+        var sekkm;
+        if(vreme1!=null)
+        {
+          var konversek7=1/60*vreme2;
+          var brzina1=parseInt(vreme1)+parseFloat(konversek7);
+        }
+          else
+          {
+          var brzina1=parseInt(vreme1);
+          }
+        
+        var t1=put1*brzina1; 
+//////////////ovo prethodno je idealan slucaj, nema min-sek niti razlomljenih brojeva kao 0.5km npr
+//////sada cemo to da odradimo///////////////////
+        lel=treci.split("x")[[0]];
+
+//3k hlađenje@6:00
+var put4=cetvrti.split("k")[[0]]; //2
+      
+        var vre=cetvrti.split("@")[[1]]; //6:00
+        var vre1=vre.split(":")[[0]]; //6
+        var sekkm1;
+        if(sekkm1=vre[[1]]==":")
+        {
+          var vrem11=vre.split(":")[[1]];
+          var konversek3=1/60*vrem11;
+          var brzina4=parseInt(vre1)+parseFloat(konversek3);
+          
+        }
+          else
+          {
+          
+          var brzina4=parseInt(vre1);
+          }
+        
+        var t4=put4*brzina4; 
+
+
+/////////////////////////////////////////////////
+////4x(2min@5:40+2min@5:10+2min@4:40)
+////2x(1.5min@5:30+1.5min@5:40)
+
+        var n=treci.split("@")[[0]]; //2x(1.5min
+        var pp=n.split("x")[[0]]; //2
+        var kmin=n.split("km")[[0]]; //1.5
+        var put2=kmin.split("(")[[1]];
+        
+      var nn1=treci.split("@")[[1]]; //5:30
+        var sekundi;
+        var novonovo=nn1[[0]]; //4
+        if(sekundi=nn1[[1]]==":")
+        {
+          var sekundi1=nn1[[2]]; //1
+          if(nn1[[3]]!=null)
+          {
+            var sekdodatni=nn1[[3]]; //5
+            var ssek=sekundi1+sekdodatni;
+            var konversek=1/60*ssek;
+            var brzina2=parseInt(novonovo)+parseFloat(konversek);
+          }
+          else
+          {
+          var konversek=1/60*sekundi1;
+          var brzina2=parseInt(nn1)+parseInt(konversek);
+          }
+        } 
+        var t2=put2*brzina2;
+
+        //////1.5min@5:40)
+        var nn2=treci.split("+")[[1]]; //1.5min@5:40)
+        var put3=nn2.split("km")[[0]];
+
+        var n2=treci.split("@")[[2]]; //6:00
+        var a2=n2.split(")")[[0]];
+        var novonovo5=a2[[0]];
+        if(sekundi5=a2[[1]]==":")
+        {
+          var sekundi5=a2[[2]];
+          if(a2[[3]]!=null)
+          {
+            var sekdodatni5=nn1[[3]];
+            var ssek5=sekundi5+sekdodatni5;
+            var konversek1=1/60*ssek5;
+            var brzina3=parseInt(novonovo5)+parseFloat(konversek1);
+          }
+          else
+          {
+          var konversek1=1/60*sekundi5;
+          var brzina3=parseInt(novonovo5)+parseInt(konversek1);
+          }
+        var t3=put3*brzina3;
+        
+        var s=parseFloat(put1)+parseFloat(put4)+parseInt(lel)*(parseFloat(put2)+parseFloat(put3));
+        var vremeukupno=parseFloat(t1)+parseInt(lel)*(parseFloat(t2)+parseFloat(t3))+parseFloat(t4);
+        
+        var pace=(parseFloat(brzina2)+parseFloat(brzina3)+parseFloat(brzina1)+parseFloat(brzina4))/4;
+        var vpace=vremeukupno/s;
+
+        var cilj=trening.getRange(j,4).setValue(s).setNumberFormat("0.##");;
+        var ciljMinKm=trening.getRange(j,5).setValue(vpace).setNumberFormat("0.##");
+        var vk=vpace.toString();
+          
+        var cilj=trening.getRange(j,4).setValue(s).setNumberFormat("0.##");
+
+      
+        var vl=vk.split(".")[[0]];//prvi deo
+        var vvv=vk.split(".")[[1]];//drugi deo sekunde
+        //var ll=vvv.setNumberFormat("0.##");
+         
+        
+            //var brzinakonacno=vl+":"+(60*vvv);
+            var kk=Math.round((vvv + Number.EPSILON) * 100)/100;
+            
+           //var h=kk.toString();
+          //var hh=h.split(".")[[1]];
+
+             var brzinakonacno=parseFloat(vl)+parseFloat(kk);
+            /*x = parseFloat(x);
+            n = n || 2;
+            return parseFloat(x.toFixed(n))*/
+
+           
+
+
+        var ciljMinKm1=trening.getRange(j,5).setValue(brzinakonacno).setNumberFormat("0.##");
+        }
+        
+      }
+      
+ }
+    }
+  }
+
+
+function interval2()
+{
+  //setintervali, 3k zagrevanje@6:00 + 4x(2min@5:40+2min@5:10+2min@4:40) + 3k hlađenje@6:00
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+    var trening = ss.getSheetByName("Treninzi");
+    var lastRow = trening.getLastRow();
+
+   for(var j = 3; j<=lastRow; j++)
+  {
+    var text=trening.getRange(j,6).getValue();
+    var duzina=text.length;
+      var brojac=0;
+      var tip;
+      var prvi;
+      var drugi;
+      var prvi1;
+      var k;
+      var vreme;
+      var treci;
+      var cetvrti;
+      var lel;
+      var put;
+
+//////setintervali, 3k zagrevanje@6:00 + 4x(2min@5:40+2min@5:10+2min@4:40) + 3k hlađenje@6:00
+
+ if (tip=text.split(", ")[[0]]=="interval2")
+      {
+      
+        
+        prvi=text.split(", ")[[1]]; // 3k zagrevanje@6:00 + 4x(2min@5:40+2min@5:10+2min@4:40) + 3k hlađenje@6:00
+         drugi=prvi.split("+ ")[[0]];  // 3k zagrevanje@6:00
+         treci=prvi.split("+ ")[[1]]; //4x(2min@5:40+2min@5:10+2min@4:40)
+        cetvrti=prvi.split("+ ")[[2]]; //3k hlađenje@6:00
+         var put1=drugi.split("k")[[0]]; //3
+         //vreme koje se koristi za izracunavanje
+       
+       //ovo sto sledi je brzina, preracunavaju se sekundi u minute
+        vreme=drugi.split("@")[[1]]; //6:30
+        var vreme1=vreme.split(":")[[0]]; //6
+        var vreme2=vreme.split(":")[[1]]; //6
+        var sekkm;
+        if(vreme1!=null)
+        {
+          var konversek7=1/60*vreme2;
+          var brzina1=parseInt(vreme1)+parseFloat(konversek7);
+        }
+          else
+          {
+          var brzina1=parseInt(vreme1);
+          }
+        
+        var t1=put1*brzina1; 
+
+        lel=treci.split("x")[[0]];
+
+//3k hlađenje@6:00
+var put4=cetvrti.split("k")[[0]]; //2
+      
+        var vre=cetvrti.split("@")[[1]]; //6:00
+        var vre1=vre.split(":")[[0]]; //6
+        var sekkm1;
+        if(sekkm1=vre[[1]]==":")
+        {
+          var vrem11=vre.split(":")[[1]];
+          var konversek3=1/60*vrem11;
+          var brzina4=parseInt(vre1)+parseFloat(konversek3);
+          
+        }
+          else
+          {
+          
+          var brzina4=parseInt(vre1);
+          }
+        
+        var t4=put4*brzina4; 
+
+
+/////////////////////////////////////////////////
+////4x(2min@5:40+2min@5:10+2min@4:40)
+////2x(1.5min@5:30+1.5min@5:40)
+
+        var n=treci.split("@")[[0]]; //2x(1.5min
+        var pp=n.split("x")[[0]]; //2
+        var kmin=n.split("min")[[0]]; //1.5
+        var t2=kmin.split("(")[[1]];
+        
+      var nn1=treci.split("@")[[1]]; //5:30
+        var sekundi;
+        var novonovo=nn1[[0]]; //4
+        if(sekundi=nn1[[1]]==":")
+        {
+          var sekundi1=nn1[[2]]; //1
+          if(nn1[[3]]!=null)
+          {
+            var sekdodatni=nn1[[3]]; //5
+            var ssek=sekundi1+sekdodatni;
+            var konversek=1/60*ssek;
+            var brzina2=parseInt(novonovo)+parseFloat(konversek);
+          }
+          else
+          {
+          var konversek=1/60*sekundi1;
+          var brzina2=parseInt(nn1)+parseInt(konversek);
+          }
+        } 
+        var put2=t2/brzina2;
+
+        //////1.5min@5:40)
+        var nn2=treci.split("+")[[1]]; //1.5min@5:40)
+        var t3=nn2.split("min")[[0]];
+
+        var n2=treci.split("@")[[2]]; //6:00
+        var a2=n2.split(")")[[0]];
+        var novonovo5=a2[[0]];
+        if(sekundi5=a2[[1]]==":")
+        {
+          var sekundi5=a2[[2]];
+          if(a2[[3]]!=null)
+          {
+            var sekdodatni5=nn1[[3]];
+            var ssek5=sekundi5+sekdodatni5;
+            var konversek1=1/60*ssek5;
+            var brzina3=parseInt(novonovo5)+parseFloat(konversek1);
+          }
+          else
+          {
+          var konversek1=1/60*sekundi5;
+          var brzina3=parseInt(novonovo5)+parseInt(konversek1);
+          }
+        }
+        
+        //abc je ovde zapravo vreme a t3 brzina
+        var put3=t3/brzina3;
+         var s=parseFloat(put1)+parseFloat(put4)+parseInt(lel)*(parseFloat(put2)+parseFloat(put3));
+        var vremeukupno=parseFloat(t1)+parseInt(lel)*(parseFloat(t2)+parseFloat(t3))+parseFloat(t4);
+        var pace=(parseFloat(brzina2)+parseFloat(brzina3)+parseFloat(brzina1)+parseFloat(brzina4))/4;
+        var vpace=vremeukupno/s;
+        var brz=(parseFloat(brzina1)+parseFloat(brzina2)+parseFloat(brzina3)+parseFloat(brzina4))/4;
+
+
+        
+        var cilj=trening.getRange(j,4).setValue(s).setNumberFormat("0.##");
+        var ciljMinKm=trening.getRange(j,5).setValue(brz).setNumberFormat("0.##");
+        var vk=vpace.toString();
+          
+        var cilj=trening.getRange(j,4).setValue(s).setNumberFormat("0.##");
+
+      
+        var vl=vk.split(".")[[0]];//prvi deo
+        var vvv=vk.split(".")[[1]];//drugi deo sekunde
+     
+            var kk=Math.round((vvv + Number.EPSILON) * 100)/100;
+       
+             var brzinakonacno=parseFloat(vl)+parseFloat(kk);
+
+        var ciljMinKm1=trening.getRange(j,5).setValue(brzinakonacno).setNumberFormat("0.##");
+        }
+       
+      }
+        
+ }
+    
+
+//funkcija koja na osnovu unetog sablona treninga izdvaja km i predvidjeno vreme trcanja
+//racuna ukupan broj km koje klijent treba da istrci i pace(min/km)
+//primer ovog formata: intervali, 2k zagrevanje@6:30 + 2x(0.5km@5:30+0.5km@5:40) + 2k hlađenje@6:30
+//prvo se proverava prva, kljucna rec, potom se splituje string na delove u zavisnosti od oznaka
+//kao sto su . , @ :
+function interval3()
+{
+  //intervali, 20min zagrevanje@6:30 + 2x(1.5min@5:30+1.5min@5:40) + 20min hlađenje@6:30
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+    var trening = ss.getSheetByName("Treninzi");
+    var lastRow = trening.getLastRow();
+
+   for(var j = 3; j<=lastRow; j++)
+  {
+    var text=trening.getRange(j,6).getValue();
+
+      var brojac=0;
+      var tip;
+      var prvi;
+      var drugi;
+      var prvi1;
+      var k;
+      var vreme;
+      var treci;
+      var cetvrti;
+      var lel;
+      var put;
+
+//////intervali, 20min zagrevanje@6:30 + 2x(1.5min@5:30+1.5min@5:40) + 20min hlađenje@6:30
+
+      if (tip=text.split(", ")[[0]]=="interval3")
+      {
+     
+        prvi=text.split(", ")[[1]]; //20min zagrevanje@6:30 + 2x(1.5min@5:30+1.5min@5:40) + 20min hlađenje@6:30
+         drugi=prvi.split("+ ")[[0]];  //20min zagrevanje@6:30
+         treci=prvi.split("+ ")[[1]]; //2x(1.5min@5:30+1.5min@5:40)
+        cetvrti=prvi.split("+ ")[[2]]; //20min hlađenje@6:30
+         prvi1=drugi.split("@")[[0]]; //20min 
+         //vreme koje se koristi za izracunavanje
+        var t1=prvi.split("min")[[0]]; //20
+       
+       //ovo sto sledi je brzina, preracunavaju se sekundi u minute
+        vreme=drugi.split("@")[[1]]; //6:30
+        var vreme1=vreme.split(":")[[0]]; //6
+        var vreme2=vreme.split(":")[[1]]; //6
+        var sekkm;
+        if(vreme1!=null)
+        {
+          var konversek7=1/60*vreme2;
+          var brzina1=parseInt(vreme1)+parseFloat(konversek7);
+        }
+          else
+          {
+          var brzina1=parseInt(vreme1);
+          }
+        
+        var put1=t1/brzina1; 
+//////////////ovo prethodno je idealan slucaj, nema min-sek niti razlomljenih brojeva kao 0.5km npr
+//////sada cemo to da odradimo///////////////////
+        lel=treci.split("x")[[0]];
+
+//20min hlađenje@6:30
+var t4=cetvrti.split("min")[[0]]; //2
+      
+        var vre=cetvrti.split("@")[[1]]; //6:00
+        var vre1=vre.split(":")[[0]]; //6
+        var sekkm1;
+        if(sekkm1=vre[[1]]==":")
+        {
+          var vrem11=vre.split(":")[[1]];
+          var konversek3=1/60*vrem11;
+          var brzina4=parseInt(vre1)+parseFloat(konversek3);
+          
+        }
+          else
+          {
+          
+          var brzina4=parseInt(vre1);
+          }
+        
+        var put4=t4/brzina4; 
+
+
+/////////////////////////////////////////////////
+////2x(1.5min@5:30+1.5min@5:40)
+
+        var n=treci.split("@")[[0]]; //2x(1.5min
+        var pp=n.split("x")[[0]]; //2
+        var kmin=n.split("min")[[0]]; //1.5
+        var t2=kmin.split("(")[[1]];
+        
+      var nn1=treci.split("@")[[1]]; //5:30
+        var sekundi;
+        var novonovo=nn1[[0]]; //4
+        if(sekundi=nn1[[1]]==":")
+        {
+          var sekundi1=nn1[[2]]; //1
+          if(nn1[[3]]!=null)
+          {
+            var sekdodatni=nn1[[3]]; //5
+            var ssek=sekundi1+sekdodatni;
+            var konversek=1/60*ssek;
+            var brzina2=parseInt(novonovo)+parseFloat(konversek);
+          }
+          else
+          {
+          var konversek=1/60*sekundi1;
+          var brzina2=parseInt(nn1)+parseInt(konversek);
+          }
+        } 
+        var put2=t2/brzina2;
+
+        //////1.5min@5:40)
+        var nn2=treci.split("+")[[1]]; //1.5min@5:40)
+        var t3=nn2.split("min")[[0]];
+
+        var n2=treci.split("@")[[2]]; //6:00
+        var a2=n2.split(")")[[0]];
+        var novonovo5=a2[[0]];
+        if(sekundi5=a2[[1]]==":")
+        {
+          var sekundi5=a2[[2]];
+          if(a2[[3]]!=null)
+          {
+            var sekdodatni5=nn1[[3]];
+            var ssek5=sekundi5+sekdodatni5;
+            var konversek1=1/60*ssek5;
+            var brzina3=parseInt(novonovo5)+parseFloat(konversek1);
+          }
+          else
+          {
+          var konversek1=1/60*sekundi5;
+          var brzina3=parseInt(novonovo5)+parseInt(konversek1);
+          }
+        }
+        
+        var put3=t3/brzina3;
+
+        var s=parseFloat(put1)+parseFloat(put4)+parseInt(lel)*(parseFloat(put2)+parseFloat(put3));
+        var minkm=parseFloat(t1)+parseInt(lel)*(parseFloat(t2)+parseFloat(t2))+parseFloat(t4);
+        var vremeukupno=parseFloat(t1)+parseInt(lel)*(parseFloat(t2)+parseFloat(t3))+parseFloat(t4);
+        var pace=(parseFloat(brzina2)+parseFloat(brzina3)+parseFloat(brzina1)+parseFloat(brzina4))/4;
+        var vpace=vremeukupno/s;
+       
+
+        var vk=vpace.toString();
+          
+        var cilj=trening.getRange(j,4).setValue(s).setNumberFormat("0.##");
+
+      
+        var vl=vk.split(".")[[0]];//prvi deo
+        var vvv=vk.split(".")[[1]];//drugi deo sekunde
+        //var ll=vvv.setNumberFormat("0.##");
+         
+        
+            //var brzinakonacno=vl+":"+(60*vvv);
+            var kk=Math.round((vvv + Number.EPSILON) * 100)/100;
+            
+           //var h=kk.toString();
+          //var hh=h.split(".")[[1]];
+
+             var brzinakonacno=parseFloat(vl)+parseFloat(kk);
+            /*x = parseFloat(x);
+            n = n || 2;
+            return parseFloat(x.toFixed(n))*/
+
+           
+
+
+        var ciljMinKm1=trening.getRange(j,5).setValue(brzinakonacno).setNumberFormat("0.##");
+       
+      }
+     
+ }
+    }
+
+
+
+function interval4()
+{
+  //intervali, 20min zagrevanje@6:30 + 2x(0.5km@5:30+0.5km@5:40) + 2omin hlađenje@6:30
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+    var trening = ss.getSheetByName("Treninzi");
+    var lastRow = trening.getLastRow();
+
+   for(var j = 3; j<=lastRow; j++)
+  {
+    var text=trening.getRange(j,6).getValue();
+    var duzina=text.length;
+    
+      var brojac=0;
+      var tip;
+      var prvi;
+      var drugi;
+      var prvi1;
+      var k;
+      var vreme;
+      var treci;
+      var cetvrti;
+      var lel;
+      var put;
+
+//////intervali, 20min zagrevanje@6:30 + 2x(0.5km@5:30+0.5km@5:40) + 2omin hlađenje@6:30
+
+      if (tip=text.split(", ")[[0]]=="interval4")
+      {
+        var duzina1=duzina-10;
+        
+        prvi=text.split(", ")[[1]]; //20min zagrevanje@6:30 + 2x(0.5km@5:30+0.5km@5:40) + 2omin hlađenje@6:30
+         drugi=prvi.split("+ ")[[0]];  //20min zagrevanje@6:30
+         treci=prvi.split("+ ")[[1]]; //2x(0.5km@5:30+0.5km@5:40)
+        cetvrti=prvi.split("+ ")[[2]]; //20min hlađenje@6:30
+         prvi1=drugi.split("@")[[0]]; //20min 
+         //vreme koje se koristi za izracunavanje
+        var t1=prvi.split("min")[[0]]; //20
+       
+       //ovo sto sledi je brzina, preracunavaju se sekundi u minute
+        vreme=drugi.split("@")[[1]]; //6:30
+        var vreme1=vreme.split(":")[[0]]; //6
+        var vreme2=vreme.split(":")[[1]]; //6
+        var sekkm;
+        if(vreme1!=null)
+        {
+          var konversek7=1/60*vreme2;
+          var brzina1=parseInt(vreme1)+parseFloat(konversek7);
+        }
+          else
+          {
+          var brzina1=parseInt(vreme1);
+          }
+        
+        var put1=t1/brzina1; 
+//////////////ovo prethodno je idealan slucaj, nema min-sek niti razlomljenih brojeva kao 0.5km npr
+//////sada cemo to da odradimo///////////////////
+        lel=treci.split("x")[[0]];
+
+//20min hlađenje@6:30
+var t4=cetvrti.split("min")[[0]]; //2
+      
+        var vre=cetvrti.split("@")[[1]]; //6:00
+        var vre1=vre.split(":")[[0]]; //6
+        var sekkm1;
+        if(sekkm1=vre[[1]]==":")
+        {
+          var vrem11=vre.split(":")[[1]];
+          var konversek3=1/60*vrem11;
+          var brzina4=parseInt(vre1)+parseFloat(konversek3);
+          
+        }
+          else
+          {
+          
+          var brzina4=parseInt(vre1);
+          }
+        
+        var put4=t4/brzina4; 
+
+
+      /////////////////////////////////////////////////
+          ////2x(0.5km@5:30+0.5km@5:40)
+
+        var n=treci.split("@")[[0]]; //2x(1.5min
+        var pp=n.split("x")[[0]]; //2
+        var kmin=n.split("km")[[0]]; //1.5
+        var put2=kmin.split("(")[[1]];
+        
+      var nn1=treci.split("@")[[1]]; //5:30
+        var sekundi;
+        var novonovo=nn1[[0]]; //4
+        if(sekundi=nn1[[1]]==":")
+        {
+          var sekundi1=nn1[[2]]; //1
+          if(nn1[[3]]!=null)
+          {
+            var sekdodatni=nn1[[3]]; //5
+            var ssek=sekundi1+sekdodatni;
+            var konversek=1/60*ssek;
+            var brzina2=parseInt(novonovo)+parseFloat(konversek);
+          }
+          else
+          {
+          var konversek=1/60*sekundi1;
+          var brzina2=parseInt(nn1)+parseInt(konversek);
+          }
+        } 
+        var t2=put2*brzina2;
+
+        //////1.5min@5:40)
+        var nn2=treci.split("+")[[1]]; //1.5min@5:40)
+        var put3=nn2.split("km")[[0]];
+        
+        var n2=treci.split("@")[[2]]; //6:00
+        var a2=n2.split(")")[[0]];
+        var novonovo5=a2[[0]];
+        if(sekundi5=a2[[1]]==":")
+        {
+          var sekundi5=a2[[2]];
+          if(a2[[3]]!=null)
+          {
+            var sekdodatni5=nn1[[3]];
+            var ssek5=sekundi5+sekdodatni5;
+            var konversek1=1/60*ssek5;
+            var brzina3=parseInt(novonovo5)+parseFloat(konversek1);
+          }
+          else
+          {
+          var konversek1=1/60*sekundi5;
+          var brzina3=parseInt(novonovo5)+parseInt(konversek1);
+          }
+        }
+
+        var t3=put3*brzina3;
+
+       var s=parseFloat(put1)+parseFloat(put4)+parseInt(lel)*(parseFloat(put2)+parseFloat(put3));
+        var vremeukupno=parseFloat(t1)+parseInt(lel)*(parseFloat(t2)+parseFloat(t3))+parseFloat(t4);
+        var pace=(parseFloat(brzina2)+parseFloat(brzina3)+parseFloat(brzina1)+parseFloat(brzina4))/4;
+        var vpace=vremeukupno/s;
+
+        var cilj=trening.getRange(j,4).setValue(s).setNumberFormat("0.##");
+        var ciljMinKm=trening.getRange(j,5).setValue(vpace).setNumberFormat("0.##");
+        
+        var vk=vpace.toString();
+          
+        var cilj=trening.getRange(j,4).setValue(s).setNumberFormat("0.##");
+
+      
+        var vl=vk.split(".")[[0]];//prvi deo
+        var vvv=vk.split(".")[[1]];//drugi deo sekunde
+        //var ll=vvv.setNumberFormat("0.##");
+         
+        
+            //var brzinakonacno=vl+":"+(60*vvv);
+            var kk=Math.round((vvv + Number.EPSILON) * 100)/100;
+            
+           //var h=kk.toString();
+          //var hh=h.split(".")[[1]];
+
+             var brzinakonacno=parseFloat(vl)+parseFloat(kk);
+            /*x = parseFloat(x);
+            n = n || 2;
+            return parseFloat(x.toFixed(n))*/
+
+           
+
+
+        var ciljMinKm1=trening.getRange(j,5).setValue(brzinakonacno).setNumberFormat("0.##");
+      }
+      
+ }
+    }
+  
+
+function setinterval()
+{
+  //setintervali, 3k zagrevanje@6:00 + 4x(2min@5:40+2min@5:10+2min@4:40) + 3k hlađenje@6:00
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+    var trening = ss.getSheetByName("Treninzi");
+    var lastRow = trening.getLastRow();
+
+   for(var j = 3; j<=lastRow; j++)
+  {
+    var text=trening.getRange(j,6).getValue();
+      var brojac=0;
+      var tip;
+      var prvi;
+      var drugi;
+      var prvi1;
+      var k;
+      var vreme;
+      var treci;
+      var cetvrti;
+      var lel;
+      var put;
+
+//////setintervali, 3k zagrevanje@6:00 + 4x(2min@5:40+2min@5:10+2min@4:40) + 3k hlađenje@6:00
+
+ if (tip=text.split(", ")[[0]]=="setinterval")
+      {
+ 
+        prvi=text.split(", ")[[1]]; // 3k zagrevanje@6:00 + 4x(2min@5:40+2min@5:10+2min@4:40) + 3k hlađenje@6:00
+         drugi=prvi.split("+ ")[[0]];  // 3k zagrevanje@6:00
+         treci=prvi.split("+ ")[[1]]; //4x(2min@5:40+2min@5:10+2min@4:40)
+        cetvrti=prvi.split("+ ")[[2]]; //3k hlađenje@6:00
+         var put1=drugi.split("k")[[0]]; //3
+         //vreme koje se koristi za izracunavanje
+       
+       //ovo sto sledi je brzina, preracunavaju se sekundi u minute
+        vreme=drugi.split("@")[[1]]; //6:30
+        var vreme1=vreme.split(":")[[0]]; //6
+        var vreme2=vreme.split(":")[[1]]; //6
+        var sekkm;
+        if(vreme1!=null)
+        {
+          var konversek7=1/60*vreme2;
+          var brzina1=parseInt(vreme1)+parseFloat(konversek7);
+        }
+          else
+          {
+          var brzina1=parseInt(vreme1);
+          }
+        
+        var t1=put1*brzina1; 
+//////////////ovo prethodno je idealan slucaj, nema min-sek niti razlomljenih brojeva kao 0.5km npr
+//////sada cemo to da odradimo///////////////////
+        lel=treci.split("x")[[0]];
+
+//3k hlađenje@6:00
+var put4=cetvrti.split("k")[[0]]; //2
+      
+        var vre=cetvrti.split("@")[[1]]; //6:00
+        var vre1=vre.split(":")[[0]]; //6
+        var sekkm1;
+        if(sekkm1=vre[[1]]==":")
+        {
+          var vrem11=vre.split(":")[[1]];
+          var konversek3=1/60*vrem11;
+          var brzina4=parseInt(vre1)+parseFloat(konversek3);
+          
+        }
+          else
+          {
+          
+          var brzina4=parseInt(vre1);
+          }
+        
+        var t4=put4*brzina4; 
+
+
+/////////////////////////////////////////////////
+////4x(2min@5:40+2min@5:10+2min@4:40)
+////2x(1.5min@5:30+1.5min@5:40)
+
+        var n=treci.split("@")[[0]]; //2x(1.5min
+        var pp=n.split("x")[[0]]; //2
+        var kmin=n.split("min")[[0]]; //1.5
+        var t2=kmin.split("(")[[1]];
+        
+      var nn1=treci.split("@")[[1]]; //5:30
+        var sekundi;
+        var novonovo=nn1[[0]]; //4
+        if(sekundi=nn1[[1]]==":")
+        {
+          var sekundi1=nn1[[2]]; //1
+          if(nn1[[3]]!=null)
+          {
+            var sekdodatni=nn1[[3]]; //5
+            var ssek=sekundi1+sekdodatni;
+            var konversek=1/60*ssek;
+            var brzina2=parseInt(novonovo)+parseFloat(konversek);
+          }
+          else
+          {
+          var konversek=1/60*sekundi1;
+          var brzina2=parseInt(nn1)+parseInt(konversek);
+          }
+        } 
+        var put2=t2/brzina2;
+
+        //////1.5min@5:40)
+        var nn2=treci.split("+")[[1]]; //1.5min@5:40)
+        var t3=nn2.split("min")[[0]];
+
+        var n2=treci.split("@")[[2]]; //6:00
+        var a2=n2.split(")")[[0]];
+        var novonovo5=a2[[0]];
+        if(sekundi5=a2[[1]]==":")
+        {
+          var sekundi5=a2[[2]];
+          if(a2[[3]]!=null)
+          {
+            var sekdodatni5=nn1[[3]];
+            var ssek5=sekundi5+sekdodatni5;
+            var konversek1=1/60*ssek5;
+            var brzina3=parseInt(novonovo5)+parseFloat(konversek1);
+          }
+          else
+          {
+          var konversek1=1/60*sekundi5;
+          var brzina3=parseInt(novonovo5)+parseInt(konversek1);
+          }
+        }
+           var put3=t3/brzina3;
+
+      var nNn2=treci.split("+")[[2]];
+
+      var t5=nNn2.split("min")[[0]];
+
+        var n2=treci.split("@")[[2]]; //6:00
+        var a22=n2.split(")")[[0]];
+        var novonovo9=a22[[0]];
+        if(sekundi9=a22[[1]]==":")
+        {
+          var sekundi9=a22[[2]];
+          if(a22[[3]]!=null)
+          {
+            var sekdodatni9=nn1[[3]];
+            var ssek9=sekundi9+sekdodatni9;
+            var konversek9=1/60*ssek9;
+            var brzina5=parseInt(novonovo9)+parseFloat(konversek9);
+          }
+          else
+          {
+          var konversek9=1/60*sekundi55;
+          var brzina5=parseInt(novonovo5)+parseInt(konversek1);
+          }
+        }
+           var put5=t5/brzina5;
+
+
+       var s=parseFloat(put1)+parseFloat(put4)+parseInt(lel)*(parseFloat(put2)+parseFloat(put3)+parseFloat(put5));
+        var vremeukupno=parseFloat(t1)+parseInt(lel)*(parseFloat(t2)+parseFloat(t3)+parseFloat(t5))+parseFloat(t4);
+        var pace=(parseFloat(brzina2)+parseFloat(brzina3)+parseFloat(brzina1)+parseFloat(brzina4))/4;
+        var vpace=vremeukupno/s;
+
+        
+        var cilj=trening.getRange(j,4).setValue(s).setNumberFormat("0.##");
+        var ciljMinKm=trening.getRange(j,5).setValue(vpace).setNumberFormat("0.##");
+        
+        var vk=vpace.toString();
+          
+        var cilj=trening.getRange(j,4).setValue(s).setNumberFormat("0.##");
+
+      
+        var vl=vk.split(".")[[0]];//prvi deo
+        var vvv=vk.split(".")[[1]];//drugi deo sekunde
+        //var ll=vvv.setNumberFormat("0.##");
+         
+        
+            //var brzinakonacno=vl+":"+(60*vvv);
+            var kk=Math.round((vvv + Number.EPSILON) * 100)/100;
+            
+           //var h=kk.toString();
+          //var hh=h.split(".")[[1]];
+
+             var brzinakonacno=parseFloat(vl)+parseFloat(kk);
+            /*x = parseFloat(x);
+            n = n || 2;
+            return parseFloat(x.toFixed(n))*/
+
+           
+
+
+        var ciljMinKm1=trening.getRange(j,5).setValue(brzinakonacno).setNumberFormat("0.##");
+      }
+     
+ }
+    }
+
+
+
+
+//funkcija koja izvlaci iz google sheeta dane koje je klijent odabrao za trening i boji te dane u njegovom personalizovanom programu
+//takodje boje se i polja za trening kako bi bilo lakse treneru da zna gde da unese treninge za klijenta
+function dani() 
+{
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var pomocni = ss.getSheetByName("Treninzi");
+    var lastRow = pomocni.getLastRow();
+var brojac=0;
+var odabraniDani=pomocni.getRange(1,15).getValue();
+   for(var j = 2; j<=lastRow; j++)
+  {
+    // @ts-ignore
+    var duzina=odabraniDani.length;
+    for(var i=0;i<duzina;i++)
+    {
+      // @ts-ignore
+      var dani1=odabraniDani.split(", ")[i];
+      
+      if(dani1=="Ponedeljak")
+    {
+      pomocni.getRange(3,2).setBackground('#FF0000');
+      pomocni.getRange(11,2).setBackground('#FF0000');
+      pomocni.getRange(3,6).setBackground('#FF0000');
+      pomocni.getRange(11,6).setBackground('#FF0000');
+      
+    }
+    else if(dani1=="Utorak")
+    {
+     pomocni.getRange(4,2).setBackground('#FF0000');
+      pomocni.getRange(12,2).setBackground('#FF0000');
+      pomocni.getRange(4,6).setBackground('#FF0000');
+      pomocni.getRange(12,6).setBackground('#FF0000');
+    }
+    else if(dani1=="Sreda")
+    {
+      pomocni.getRange(5,2).setBackground('#FF0000');
+      pomocni.getRange(13,2).setBackground('#FF0000');
+      pomocni.getRange(5,6).setBackground('#FF0000');
+      pomocni.getRange(13,6).setBackground('#FF0000');
+    }
+    else if(dani1=="Cetvrtak")
+    {
+      pomocni.getRange(6,2).setBackground('#FF0000');
+      pomocni.getRange(14,2).setBackground('#FF0000');
+      pomocni.getRange(6,6).setBackground('#FF0000');
+      pomocni.getRange(14,6).setBackground('#FF0000');
+    }
+    else if(dani1=="Petak")
+    {
+      pomocni.getRange(7,2).setBackground('#FF0000');
+      pomocni.getRange(15,2).setBackground('#FF0000');
+      pomocni.getRange(7,6).setBackground('#FF0000');
+      pomocni.getRange(15,6).setBackground('#FF0000');
+    }
+    else if(dani1=="Subota")
+    {
+      pomocni.getRange(8,2).setBackground('#FF0000');
+      pomocni.getRange(16,2).setBackground('#FF0000');
+      pomocni.getRange(8,6).setBackground('#FF0000');
+      pomocni.getRange(16,6).setBackground('#FF0000');
+    }
+    else if(dani1=="Nedelja")
+    {
+      pomocni.getRange(9,2).setBackground('#FF0000');
+      pomocni.getRange(17,2).setBackground('#FF0000');
+      pomocni.getRange(9,6).setBackground('#FF0000');
+      pomocni.getRange(17,6).setBackground('#FF0000');
+    }
+   
+ }
+  }
+}
+
+//funkcija koja setuje kalendar, u kalendar upisuje adminu obavestenje da napravi program vezbi za narednu nedelju
+//program radi tako sto uzima poslednji dan iz poslednje nedelje i tada salje obavestenje, znaci nedelja u zadnjoj dodatoj nedelji
+function setujObavestenjaKalendar1()
+{
+
+  var sheet = SpreadsheetApp.getActiveSpreadsheet();
+  var ttt=sheet.getSheetByName('Treninzi');
+  var calendar = CalendarApp.getCalendarById('s.vesna96@gmail.com');
+  var numRows = ttt.getLastRow();   
+  var klijentime=ttt.getRange(1,16).getValue();
+ var eventID =ttt.getRange(numRows,10).getValue();
+  var complete="Done";
+ if(eventID!=complete)
+ {
+   var datum = ttt.getRange(numRows,1).getValue().toString();
+    var name = 'Napravite novi set treninga za klijenta '+klijentime; 
+    var rDate = new Date(datum); 
+  
+      calendar.createEvent(name.toLocaleString(), rDate, rDate);
+      ttt.getRange(numRows,10).setValue(complete);
+     
+  }
+}
+function createCalendarEvent() 
+{
+  var sheet = SpreadsheetApp.getActiveSpreadsheet();
+  var ttt=sheet.getSheetByName('Treninzi');
+  var calendar = CalendarApp.getCalendarById('s.vesna96@gmail.com');
+  var numRows = ttt.getLastRow();   
+  var name;
+
+  var klijentime=ttt.getRange(1,16).getValue();
+  var lel=numRows-6;
+  for (var i = numRows-6; i <= numRows; i++) 
+  {
+    var eventID =ttt.getRange(i,11).getValue();
+  var datum = ttt.getRange(i,1).getValues();
+  var rDate = new Date(datum); 
+  var complete="Done";
+  name = ttt.getRange(i,6).getValues();
+  var name1=klijentime+name;
+  if(eventID==complete)
+  {
+    /*if(eventID=="Done")
+    {
+
+    }*/
+//do nothing
+  }
+  else
+   if(eventID=="")
+  {
+    if(name!="")
+    {
+    
+    calendar.createEvent(name1.toLocaleString(), rDate, rDate);
+  ttt.getRange(i,11).setValue(complete);
+     }
+  }
+  
+  }
+}
+//kreira se posebna funkcija,samo se kreira dokument, ne salje se klijentu mejlom
+function kreirajDokument() 
+{
+  //This value should be the id of your document template that we created in the last step
+  const googleDocTemplate = DriveApp.getFileById('1gsXVC1tck80RsgOZKWJSeTjQUGEJlLl9ou4bPOPVo1o');
+  
+  //This value should be the id of the folder where you want your completed documents stored
+  const destinationFolder = DriveApp.getFolderById('14AoWZooUfO_4xrtk5InGKn7X3f1WaQy8')
+  //Here we store the sheet as a variable
+  var sheet = SpreadsheetApp.getActiveSpreadsheet();
+    
+    var ttt=sheet.getSheetByName('Treninzi');
+   
+    var index=ttt.getLastRow();
+    var row=ttt.getLastColumn();
+  var ime=ttt.getRange(1,16).getValue();
+  
+  const copy = googleDocTemplate.makeCopy(ime, destinationFolder);
+
+  var numRows = ttt.getLastRow();   // Number of rows to process
+
+  var eventID =ttt.getRange(numRows,2).getValues();
+  var complete="Done";
+  var zadnjiPon=numRows-5;
+  var poslednjiPon=ttt.getRange(zadnjiPon,1).getValue();
+    var gotovo="Poslato";
+    //All of the content lives in the body, so we get that for editing
+   var poslat=ttt.getRange(numRows,13).getValue();
+  //Start processing each spreadsheet row
+  const doc = DocumentApp.openById(copy.getId())
+    //All of the content lives in the body, so we get that for editing
+    const body = doc.getBody();
+    
+    body.replaceText('{{Korisnik}}', ime);
+   if(poslat!=gotovo)
+   {
+   for(var i=zadnjiPon-1;i<numRows;i++)
+   {
+     
+     //var datum=sheet.getRange(i,1).getValues();
+    var trening=ttt.getRange(i,6).getValues(); 
+    var trening1=ttt.getRange(i+1,6).getValues(); 
+    var trening2=ttt.getRange(i+2,6).getValues(); 
+    var trening3=ttt.getRange(i+3,6).getValues(); 
+    var trening4=ttt.getRange(i+4,6).getValues(); 
+    var trening5=ttt.getRange(i+5,6).getValues(); 
+    var trening6=ttt.getRange(i+6,6).getValues(); 
+
+    var cilj=ttt.getRange(i,4).getValues(); 
+    var cilj1=ttt.getRange(i+1,4).getValues(); 
+    var cilj2=ttt.getRange(i+2,4).getValues(); 
+    var cilj3=ttt.getRange(i+3,4).getValues(); 
+    var cilj4=ttt.getRange(i+4,4).getValues(); 
+    var cilj5=ttt.getRange(i+5,4).getValues(); 
+    var cilj6=ttt.getRange(i+6,4).getValues(); 
+
+    var ciljpace=ttt.getRange(i,5).getValues(); 
+    var ciljpace1=ttt.getRange(i+1,5).getValues(); 
+    var ciljpace2=ttt.getRange(i+2,5).getValues(); 
+    var ciljpace3=ttt.getRange(i+3,5).getValues(); 
+    var ciljpace4=ttt.getRange(i+4,5).getValues(); 
+    var ciljpace5=ttt.getRange(i+5,5).getValues(); 
+    var ciljpace6=ttt.getRange(i+6,5).getValues();
+
+    var comment=ttt.getRange(i,7).getValues(); 
+    var comment1=ttt.getRange(i+1,7).getValues(); 
+    var comment2=ttt.getRange(i+2,7).getValues(); 
+    var comment3=ttt.getRange(i+3,7).getValues(); 
+    var comment4=ttt.getRange(i+4,7).getValues(); 
+    var comment5=ttt.getRange(i+5,7).getValues(); 
+    var comment6=ttt.getRange(i+6,7).getValues(); 
+
+     var datum1=ttt.getRange(i,1).getValues();
+    var datum2=ttt.getRange(i+1,1).getValues();
+     var datum3=ttt.getRange(i+2,1).getValues();
+     var datum4=ttt.getRange(i+3,1).getValues();
+     var datum5=ttt.getRange(i+4,1).getValues();
+     var datum6=ttt.getRange(i+5,1).getValues();
+    
+     var d= new Date(datum6);
+     var nextDate1 = new Date(d.getTime()+3600000*24);
+    // @ts-ignore
+   
+    body.replaceText('{{Trening}}', trening);
+    body.replaceText('{{Trening1}}', trening1);
+    body.replaceText('{{Trening2}}', trening2);
+    body.replaceText('{{Trening3}}', trening3);
+    body.replaceText('{{Trening4}}', trening4);
+    body.replaceText('{{Trening5}}', trening5);
+    body.replaceText('{{Trening6}}', trening6);
+
+    body.replaceText('{{Cilj}}', cilj);
+    body.replaceText('{{Cilj1}}', cilj1);
+    body.replaceText('{{Cilj2}}', cilj2);
+    body.replaceText('{{Cilj3}}', cilj3);
+    body.replaceText('{{Cilj4}}', cilj4);
+    body.replaceText('{{Cilj5}}', cilj5);
+    body.replaceText('{{Cilj6}}', cilj6);
+
+    body.replaceText('{{CiljPace}}', ciljpace);
+    body.replaceText('{{CiljPace1}}', ciljpace1);
+    body.replaceText('{{CiljPace2}}', ciljpace2);
+    body.replaceText('{{CiljPace3}}', ciljpace3);
+    body.replaceText('{{CiljPace4}}', ciljpace4);
+    body.replaceText('{{CiljPace5}}', ciljpace5);
+    body.replaceText('{{CiljPace6}}', ciljpace6);
+
+    body.replaceText('{{Comment}}', comment);
+    body.replaceText('{{Comment1}}', comment1);
+    body.replaceText('{{Comment2}}', comment2);
+    body.replaceText('{{Comment3}}', comment3);
+    body.replaceText('{{Comment4}}', comment4);
+    body.replaceText('{{Comment5}}', comment5);
+    body.replaceText('{{Comment6}}', comment6);
+   
+   body.replaceText('{{Date}}', datum1);
+    body.replaceText('{{Date1}}', datum2);
+    body.replaceText('{{Date2}}', datum3);
+    body.replaceText('{{Date3}}', datum4);
+    body.replaceText('{{Date4}}', datum5);
+    body.replaceText('{{Date5}}', datum6);
+    body.replaceText('{{Date6}}', nextDate1);
+   
+   }
+   doc.saveAndClose();
+   var id=doc.getId();
+    //var poslat=ttt.getRange(numRows,13).setValue("Poslato");
+
+    //var currentEmail=ttt.getRange(1,17).getValue();
+    
+    var file = DriveApp.getFileById(id);
+ }
+}
+//ova funkcija kreira dokument sa personalizovanim treninzima i salje ih klijentu mejlom 2u1 funkcija
+function createNewGoogleDocs2FROMTemplate() 
+{
+  //This value should be the id of your document template that we created in the last step
+  const googleDocTemplate = DriveApp.getFileById('1gsXVC1tck80RsgOZKWJSeTjQUGEJlLl9ou4bPOPVo1o');
+  
+  //This value should be the id of the folder where you want your completed documents stored
+  const destinationFolder = DriveApp.getFolderById('14AoWZooUfO_4xrtk5InGKn7X3f1WaQy8')
+  //Here we store the sheet as a variable
+  var sheet = SpreadsheetApp.getActiveSpreadsheet();
+    
+    var ttt=sheet.getSheetByName('Treninzi');
+   
+    var index=ttt.getLastRow();
+    var row=ttt.getLastColumn();
+  var ime=ttt.getRange(1,16).getValue();
+  
+  const copy = googleDocTemplate.makeCopy(ime, destinationFolder);
+
+  var numRows = ttt.getLastRow();   // Number of rows to process
+
+  var eventID =ttt.getRange(numRows,2).getValues();
+  var complete="Done";
+  var zadnjiPon=numRows-5;
+  var poslednjiPon=ttt.getRange(zadnjiPon,1).getValue();
+    var gotovo="Poslato";
+    //All of the content lives in the body, so we get that for editing
+   var poslat=ttt.getRange(numRows,13).getValue();
+  //Start processing each spreadsheet row
+  const doc = DocumentApp.openById(copy.getId())
+    //All of the content lives in the body, so we get that for editing
+    const body = doc.getBody();
+    //var danasnjiDan=Date.now();
+     var now = new Date();
+
+  var checkDate = new Date(now.getTime());
+    var dan=checkDate.getDay();
+
+    
+    body.replaceText('{{Korisnik}}', ime);
+   if(poslat!=gotovo)
+   {
+   for(var i=zadnjiPon-1;i<numRows;i++)
+   {
+     
+     //var datum=sheet.getRange(i,1).getValues();
+    var trening=ttt.getRange(i,6).getValues(); 
+    var trening1=ttt.getRange(i+1,6).getValues(); 
+    var trening2=ttt.getRange(i+2,6).getValues(); 
+    var trening3=ttt.getRange(i+3,6).getValues(); 
+    var trening4=ttt.getRange(i+4,6).getValues(); 
+    var trening5=ttt.getRange(i+5,6).getValues(); 
+    var trening6=ttt.getRange(i+6,6).getValues(); 
+
+    var cilj=ttt.getRange(i,4).getValues(); 
+    var cilj1=ttt.getRange(i+1,4).getValues(); 
+    var cilj2=ttt.getRange(i+2,4).getValues(); 
+    var cilj3=ttt.getRange(i+3,4).getValues(); 
+    var cilj4=ttt.getRange(i+4,4).getValues(); 
+    var cilj5=ttt.getRange(i+5,4).getValues(); 
+    var cilj6=ttt.getRange(i+6,4).getValues(); 
+
+    var ciljpace=ttt.getRange(i,5).getValues(); 
+    var ciljpace1=ttt.getRange(i+1,5).getValues(); 
+    var ciljpace2=ttt.getRange(i+2,5).getValues(); 
+    var ciljpace3=ttt.getRange(i+3,5).getValues(); 
+    var ciljpace4=ttt.getRange(i+4,5).getValues(); 
+    var ciljpace5=ttt.getRange(i+5,5).getValues(); 
+    var ciljpace6=ttt.getRange(i+6,5).getValues();
+
+    var comment=ttt.getRange(i,7).getValues(); 
+    var comment1=ttt.getRange(i+1,7).getValues(); 
+    var comment2=ttt.getRange(i+2,7).getValues(); 
+    var comment3=ttt.getRange(i+3,7).getValues(); 
+    var comment4=ttt.getRange(i+4,7).getValues(); 
+    var comment5=ttt.getRange(i+5,7).getValues(); 
+    var comment6=ttt.getRange(i+6,7).getValues(); 
+
+     var datum1=ttt.getRange(i,1).getValues();
+    var datum2=ttt.getRange(i+1,1).getValues();
+     var datum3=ttt.getRange(i+2,1).getValues();
+     var datum4=ttt.getRange(i+3,1).getValues();
+     var datum5=ttt.getRange(i+4,1).getValues();
+     var datum6=ttt.getRange(i+5,1).getValues();
+    
+     var d= new Date(datum6);
+     var nextDate1 = new Date(d.getTime()+3600000*24);
+    // @ts-ignore
+   
+    body.replaceText('{{Trening}}', trening);
+    body.replaceText('{{Trening1}}', trening1);
+    body.replaceText('{{Trening2}}', trening2);
+    body.replaceText('{{Trening3}}', trening3);
+    body.replaceText('{{Trening4}}', trening4);
+    body.replaceText('{{Trening5}}', trening5);
+    body.replaceText('{{Trening6}}', trening6);
+
+    body.replaceText('{{Cilj}}', cilj);
+    body.replaceText('{{Cilj1}}', cilj1);
+    body.replaceText('{{Cilj2}}', cilj2);
+    body.replaceText('{{Cilj3}}', cilj3);
+    body.replaceText('{{Cilj4}}', cilj4);
+    body.replaceText('{{Cilj5}}', cilj5);
+    body.replaceText('{{Cilj6}}', cilj6);
+
+    body.replaceText('{{CiljPace}}', ciljpace);
+    body.replaceText('{{CiljPace1}}', ciljpace1);
+    body.replaceText('{{CiljPace2}}', ciljpace2);
+    body.replaceText('{{CiljPace3}}', ciljpace3);
+    body.replaceText('{{CiljPace4}}', ciljpace4);
+    body.replaceText('{{CiljPace5}}', ciljpace5);
+    body.replaceText('{{CiljPace6}}', ciljpace6);
+
+    body.replaceText('{{Comment}}', comment);
+    body.replaceText('{{Comment1}}', comment1);
+    body.replaceText('{{Comment2}}', comment2);
+    body.replaceText('{{Comment3}}', comment3);
+    body.replaceText('{{Comment4}}', comment4);
+    body.replaceText('{{Comment5}}', comment5);
+    body.replaceText('{{Comment6}}', comment6);
+   
+   body.replaceText('{{Date}}', datum1);
+    body.replaceText('{{Date1}}', datum2);
+    body.replaceText('{{Date2}}', datum3);
+    body.replaceText('{{Date3}}', datum4);
+    body.replaceText('{{Date4}}', datum5);
+    body.replaceText('{{Date5}}', datum6);
+    body.replaceText('{{Date6}}', nextDate1);
+   
+   }
+   doc.saveAndClose();
+   var id=doc.getId();
+    var poslat=ttt.getRange(numRows,13).setValue("Poslato");
+
+    var currentEmail=ttt.getRange(1,17).getValue();
+    
+    var file = DriveApp.getFileById(id);
+
+// @ts-ignore
+MailApp.sendEmail(currentEmail, 'Program trcanja', 'Personalizovani trening Vam saljemo u prilogu. Srdacan pozdrav. Vas HealthTeam', 
+{
+    name: 'HealthTeam',
+    // @ts-ignore
+    attachments: [file.getAs(MimeType.PDF)]
+});
+ }
+}
+
+//nova dodata funkcija-dodala sam jos jedan gsheet u okviru svakog klijenta, napravljen u template-u
+//kreirana je tabela po mesecima u godini, admin sam upise DA ili NE u zavisnosti od toga da li je klijent uplatio ili nije
+//ako je uplatio samo jednom mu stize poruku o uplati
+//ako nije uplatio mogu vise puta da mu stizu poruke da uplati program vezbi
+function posaljiMejlUplataRacun()
+{
+
+  var sheet = SpreadsheetApp.getActiveSpreadsheet();
+  var trening=sheet.getSheetByName("Treninzi");
+  var uplate=sheet.getSheetByName("Uplate po nedeljama");
+  var currentEmail=trening.getRange(1,17).getValue();
+
+  var lr = uplate.getLastRow()+1;
+  
+  for(var i=2; i<=lr; i++)
+  {   
+    var u=uplate.getRange(i,2).getValues();
+    var mesec=uplate.getRange(i,1).getValues();
+    var uplaceno=uplate.getRange(i,3).getValues();
+     if(u=='DA')
+    {
+      if(uplaceno=='DA')
+      {
+        //ne salje se mejl ponovo ako je uplacen trening za dati mesec.
+      }
+      else
+      {
+        //samo jednom se salje mejl o potvrdi uplate, ne dva puta
+      // @ts-ignore
+      MailApp.sendEmail(currentEmail, "Program za trcanje 2020", "Uplata za  "+mesec+"obavljena");
+      var uplaceno=uplate.getRange(i,3).setValue("DA");
+      }
+    }
+    else if(u=='NE')
+    {
+      //mejl koji se salje ako uplata nije obavljena za dati mesec
+      //ukoliko jos uvek nije uplaceno, mejl je moguce poslati opet o neuplacenom treningu
+     // @ts-ignore
+     MailApp.sendEmail(currentEmail, "Program za trcanje 2020", "Uplata za "+mesec+" nije obavljena!");
+     var uplaceno=uplate.getRange(i,3).setValue("NE");
+
+    }
+  }
+}
+

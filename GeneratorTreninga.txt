@@ -1,0 +1,816 @@
+// @ts-nocheck
+//funkcija kojom se pozivaju ostale funkcije iz padajuceg menija
+function onOpen1()
+{
+  var ui= SpreadsheetApp.getUi();
+  var menu=ui.createMenu("Funkcije programa");
+  menu.addItem("Importuj podatke i napravi foldere novim klijentima", "importujSaUpitnika");
+  menu.addItem("Izracunaj trenutni VO2max-5k", "trenutniVO2max5kNOVO");
+  menu.addItem("Izracunaj trenutni VO2max-10k", "trenutniVO2max10kNOVO");
+  menu.addItem("Izracunaj trenutni VO2max-21k", "trenutniVO2max21kNOVO");
+  menu.addItem("Izracunaj trenutni VO2max-42k", "trenutniVO2max42kNOVO");
+  menu.addItem("Izracunaj zeljeni VO2max-5k", "zeljeniVO2max5k");
+  menu.addItem("Izracunaj zeljeni VO2max-10k", "zeljeniVO2max10k");
+  menu.addItem("Izracunaj zeljeni VO2max-21k", "zeljeniVO2max21k");
+  menu.addItem("Izracunaj zeljeni VO2max-42k", "zeljeniVO2max42k");
+  menu.addToUi();
+}
+
+function onEdit(e) 
+{
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  var upitnik = ss.getSheetByName("UpitnikKlijenti");
+  var forma = ss.getSheetByName("GeneratorTreningaForma");
+  var lastRow = forma.getLastRow()-8;
+  var i;
+  for(i=2;i<lastRow;i++)
+  {
+  var id=forma.getRange(lastRow,2).getValues();
+  var stari=forma.getRange(lastRow-1,2).getValues();
+  if(id=="")
+  {
+    var novi=parseInt(stari)+parseInt(1);
+    var idd=forma.getRange(lastRow,2).setValue(novi);
+  }
+  }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                //FUNKCIJE ZA RAD SA OVIM SPREADSHEET-OM, U KOME SE NALAZE PODACI IMPORTOVANI SA UPITNIKA(GOOGLE FORME)
+                //FUNKCIJE KOJE SE NALAZE OVDE:
+                //-TRENUTNIVO2MAX5K
+                //-TRENUTNIVO2MAX10K
+                //-ZELJENIVO2MAX
+                //-IMPORUJ SA UPITNIKA I NAPRAVI AUTOMATSKE FOLDERE KLIJENTIMA
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function trenutniVO2max5k()
+{
+  //pokupljamo podatke iz gsheeta koje je uneo kljient ako je uneo vreme za 5k trku
+  //ukoliko je uneo nulu, odnosno nije uneo to vreme, onda mu se automatski upisuje 0 
+  //i za trenutni vo2max i za trenutni interval i za trenutni tempo trcanja
+   var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  var upitnik = ss.getSheetByName("UpitnikKlijenti");
+  var trenutnivo2max = ss.getSheetByName("VO2maxRezultati");
+  var intervalitempo = ss.getSheetByName("IntenzitetTreningaVO2max");
+  var tZVO2max=ss.getSheetByName("Trenutni i zeljeni VO2max-5k");
+
+  var lastRow = upitnik.getLastRow();
+  var lastRowvo2 = trenutnivo2max.getLastRow();
+  var lastRowvo3 = intervalitempo.getLastRow();
+  var minrazlikasati=1000;
+  var minrazlikaminuti=1000;
+  var minrazlikasekunde=1000;
+  var brojacOznaka=2;
+  for(var j = 2; j<=lastRow; j++)
+  {
+   var ime=upitnik.getRange(j, 3).getValues();
+   var korisnik=tZVO2max.getRange(j, 13).setValues(ime);
+
+
+if(tZVO2max.getRange(j, 14).getValue()!="Done")
+{
+    var tren5k=upitnik.getRange(j,15).getDisplayValues();
+    var satk=tZVO2max.getRange(j,7).setNumberFormat('hh').setValues(tren5k);
+    var mink=tZVO2max.getRange(j,8).setNumberFormat('[mm]').setValues(tren5k);
+    var sekk=tZVO2max.getRange(j,9).setNumberFormat('ss').setValues(tren5k);
+
+    var s1=tZVO2max.getRange(j,7).getDisplayValues();
+    var m1=tZVO2max.getRange(j,8).getDisplayValues();
+    var ss1=tZVO2max.getRange(j,9).getDisplayValues();
+    if(tren5k=="")
+            {
+              //ako nije uneo klijent vrednost sa 5k trke
+              //sve se postavlja na 0
+              var nn=0;
+              var vo2maxtren=tZVO2max.getRange(j,1).setValue(nn);
+              var treninterval=tZVO2max.getRange(j,5).setValue(nn);
+              var trentempo=tZVO2max.getRange(j,3).setValue(nn);
+              var novo=tZVO2max.getRange(j,1).setValue("Done");
+            }
+            else
+            {
+      for(var i=2;i<=lastRowvo2;i++)
+      {
+        //ovo je za ostale koji su uneli vrednost trke na 5k
+        //ovde uzimamo vrednosti iz tabela, stavljamo opet u sheet 
+        //vracamo ih u google apps script kao integere i poredimo ih
+
+          var vo2max=trenutnivo2max.getRange(i,4).getDisplayValues();
+          var sati=tZVO2max.getRange(j,10).setNumberFormat('hh').setValues(vo2max);
+          var mini=tZVO2max.getRange(j,11).setNumberFormat('[mm]').setValues(vo2max);
+          var seki=tZVO2max.getRange(j,12).setNumberFormat('ss').setValues(vo2max);
+
+          var s2=tZVO2max.getRange(j,10).getDisplayValues();
+          var m2=tZVO2max.getRange(j,11).getDisplayValues();
+          var ss2=tZVO2max.getRange(j,12).getDisplayValues();
+
+      
+      
+
+       if(Math.abs(s1-s2)==0)
+        {
+          minrazlikasati=0;
+          //ako se razlikuju u satima vreme klijenta i vreme iz tabele, onda se gleda koja vrednost je najmanja izmedju ta dva vremena
+          //prolazeci kroz tabelu i poredeci je sa vremenom klijenta, ovde samo pamtimo oznaku trenutne najmanje vrednosti
+          //isto vazi i za minute i za sekunde
+          if(Math.abs(s1-s2<minrazlikasati))
+            {
+              brojacOznaka=i;
+              minrazlikasati=Math.abs(m1-m2);
+            }
+
+          if(Math.abs(m1-m2)==0)
+          {
+            minrazlikaminuti=0;
+            if(Math.abs(m1-m2<minrazlikaminuti))
+            {
+              brojacOznaka=i;
+              minrazlikaminuti=Math.abs(m1-m2);
+            }
+
+            if(Math.abs(ss1-ss2)==0)
+            {
+             
+             brojacOznaka=i;
+             var vo2vrednost=trenutnivo2max.getRange(brojacOznaka,1).getValues();
+             var vo2maxtren=tZVO2max.getRange(j,1).setValue(vo2vrednost);
+            }
+            
+            if(Math.abs(ss1-ss2)<=minrazlikasekunde)
+            {
+              minrazlikasekunde=Math.abs(ss1-ss2);
+              brojacOznaka=i;
+              
+            }
+            //postavljanje vo2max vrednosti i vrednosti trenutnog intervala i trenutnog tempa
+            var vo2vrednost=trenutnivo2max.getRange(brojacOznaka,1).getValues();
+              var vo2maxtren=tZVO2max.getRange(j,1).setValue(vo2vrednost);
+              var inter=intervalitempo.getRange(brojacOznaka+1,10).getValues();
+              var te=intervalitempo.getRange(brojacOznaka+1,12).getValues();
+              
+              var treninterval=tZVO2max.getRange(j,5).setNumberFormat('hh:mm:ss').setValue(inter);
+              var trentempo=tZVO2max.getRange(j,3).setNumberFormat('hh:mm:ss').setValue(te);
+          }
+          var novo=tZVO2max.getRange(j,14).setValue("Done");
+        }
+      }
+      }
+      }
+  }
+}
+function trenutniVO2max5kNOVO()
+{
+  //pokupljamo podatke iz gsheeta koje je uneo kljient ako je uneo vreme za 5k trku
+  //ukoliko je uneo nulu, odnosno nije uneo to vreme, onda mu se automatski upisuje 0 
+  //i za trenutni vo2max i za trenutni interval i za trenutni tempo trcanja
+   var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  var upitnik = ss.getSheetByName("UpitnikKlijenti");
+  var trenutnivo2max = ss.getSheetByName("VO2maxRezultati");
+  var intervalitempo = ss.getSheetByName("IntenzitetTreningaVO2max");
+  var tZVO2max=ss.getSheetByName("Trenutni i zeljeni VO2max-5k");
+
+  var lastRow = upitnik.getLastRow();
+  var lastRowvo2 = trenutnivo2max.getLastRow();
+  var lastRowvo3 = intervalitempo.getLastRow();
+  //var minrazlikasati=1000;
+  //var minrazlikaminuti=1000;
+ 
+  var brojacOznaka=2;
+  for(var j = 2; j<=lastRow; j++)
+  {
+   var ime=upitnik.getRange(j, 3).getValues();
+   var korisnik=tZVO2max.getRange(j, 13).setValues(ime);
+
+
+if(tZVO2max.getRange(j, 14).getValue()!="Done")
+{
+   var minrazlikasekunde=1000;
+    var tren5k=upitnik.getRange(j,15).getDisplayValues();
+    var satk=tZVO2max.getRange(j,7).setNumberFormat('hh').setValues(tren5k);
+    var mink=tZVO2max.getRange(j,8).setNumberFormat('[mm]').setValues(tren5k);
+    var sekk=tZVO2max.getRange(j,9).setNumberFormat('ss').setValues(tren5k);
+
+    var s1=tZVO2max.getRange(j,7).getDisplayValues();
+    var m1=tZVO2max.getRange(j,8).getDisplayValues();
+    var ss1=tZVO2max.getRange(j,9).getDisplayValues();
+    
+   var sat=s1*60*60;
+   var min=(m1)*60;
+   //test za minute
+   //var min1=min/60;
+   var ukupno=parseInt(sat)+parseInt(min)+parseInt(ss1);
+
+   //testing za minute
+   //var sekk=tZVO2max.getRange(14,6).setValue(min1);
+
+//var vo2maxtren=tZVO2max.getRange(14,1).setValue(ukupno);
+    if(tren5k=="")
+            {
+              //ako nije uneo klijent vrednost sa 5k trke
+              //sve se postavlja na 0
+              var nn=0;
+              var vo2maxtren=tZVO2max.getRange(j,1).setValue(nn);
+              var treninterval=tZVO2max.getRange(j,5).setValue(nn);
+              var trentempo=tZVO2max.getRange(j,3).setValue(nn);
+              var novo=tZVO2max.getRange(j,14).setValue("Done");
+            }
+            else
+            {
+      for(var i=2;i<=lastRowvo2;i++)
+      {
+          var vo2max=trenutnivo2max.getRange(i,4).getDisplayValues();
+          var sati=tZVO2max.getRange(j,10).setNumberFormat('hh').setValues(vo2max);
+          var mini=tZVO2max.getRange(j,11).setNumberFormat('[mm]').setValues(vo2max);
+          var seki=tZVO2max.getRange(j,12).setNumberFormat('ss').setValues(vo2max);
+
+          var s2=tZVO2max.getRange(j,10).getDisplayValues();
+          var m2=tZVO2max.getRange(j,11).getDisplayValues();
+          var ss2=tZVO2max.getRange(j,12).getDisplayValues();
+
+        var satvo2max=s2*60*60;
+        var minvo2max=(m2)*60;
+        var ukupnovo2max=parseInt(satvo2max)+parseInt(minvo2max)+parseInt(ss2);
+    
+         if(Math.abs(ukupno-ukupnovo2max)<minrazlikasekunde)
+        {
+            minrazlikasekunde=Math.abs(ukupno-ukupnovo2max);
+            brojacOznaka=i;
+        }
+         if(Math.abs(ukupno-ukupnovo2max)==minrazlikasekunde)
+        {
+            minrazlikasekunde=Math.abs(ukupno-ukupnovo2max);
+            brojacOznaka=i;
+        }
+
+          
+            var vo2vrednost=trenutnivo2max.getRange(brojacOznaka,1).getValues();
+              var vo2maxtren=tZVO2max.getRange(j,1).setValue(vo2vrednost);
+              var inter=intervalitempo.getRange(brojacOznaka+1,10).getValues();
+              var te=intervalitempo.getRange(brojacOznaka+1,12).getValues();
+              
+              var treninterval=tZVO2max.getRange(j,5).setNumberFormat('hh:mm:ss').setValue(inter);
+              var trentempo=tZVO2max.getRange(j,3).setNumberFormat('hh:mm:ss').setValue(te);
+        }
+          var novo=tZVO2max.getRange(j,14).setValue("Done");
+        
+      
+        }
+      }
+      }
+      }
+ 
+      
+function trenutniVO2max10kNOVO()
+{
+  //pokupljamo podatke iz gsheeta koje je uneo kljient ako je uneo vreme za 5k trku
+  //ukoliko je uneo nulu, odnosno nije uneo to vreme, onda mu se automatski upisuje 0 
+  //i za trenutni vo2max i za trenutni interval i za trenutni tempo trcanja
+   var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  var upitnik = ss.getSheetByName("UpitnikKlijenti");
+  var trenutnivo2max = ss.getSheetByName("VO2maxRezultati");
+  var intervalitempo = ss.getSheetByName("IntenzitetTreningaVO2max");
+  var tZVO2max=ss.getSheetByName("Trenutni i zeljeni VO2max-10k");
+
+  var lastRow = upitnik.getLastRow();
+  var lastRowvo2 = trenutnivo2max.getLastRow();
+  var lastRowvo3 = intervalitempo.getLastRow();
+ 
+  var brojacOznaka=2;
+  for(var j = 2; j<=lastRow; j++)
+  {
+   var ime=upitnik.getRange(j, 3).getValues();
+   var korisnik=tZVO2max.getRange(j, 13).setValues(ime);
+
+
+if(tZVO2max.getRange(j, 14).getValue()!="Done")
+{
+   var minrazlikasekunde=1000;
+    var tren5k=upitnik.getRange(j,16).getDisplayValues();
+    var satk=tZVO2max.getRange(j,7).setNumberFormat('hh').setValues(tren5k);
+    var mink=tZVO2max.getRange(j,8).setNumberFormat('[mm]').setValues(tren5k);
+    var sekk=tZVO2max.getRange(j,9).setNumberFormat('ss').setValues(tren5k);
+
+    var s1=tZVO2max.getRange(j,7).getDisplayValues();
+    var m1=tZVO2max.getRange(j,8).getDisplayValues();
+    var ss1=tZVO2max.getRange(j,9).getDisplayValues();
+    
+   var sat=s1*60*60;
+   var min=(m1)*60;
+   //test za minute
+   //var min1=min/60;
+   var ukupno=parseInt(sat)+parseInt(min)+parseInt(ss1);
+
+   //testing za minute
+   //var sekk=tZVO2max.getRange(14,6).setValue(min1);
+
+//var vo2maxtren=tZVO2max.getRange(14,1).setValue(ukupno);
+    if(tren5k=="")
+            {
+              //ako nije uneo klijent vrednost sa 5k trke
+              //sve se postavlja na 0
+              var nn=0;
+              var vo2maxtren=tZVO2max.getRange(j,1).setValue(nn);
+              var treninterval=tZVO2max.getRange(j,5).setValue(nn);
+              var trentempo=tZVO2max.getRange(j,3).setValue(nn);
+              var novo=tZVO2max.getRange(j,14).setValue("Done");
+            }
+            else
+            {
+      for(var i=2;i<=lastRowvo2;i++)
+      {
+          var vo2max=trenutnivo2max.getRange(i,5).getDisplayValues();
+          var sati=tZVO2max.getRange(j,10).setNumberFormat('hh').setValues(vo2max);
+          var mini=tZVO2max.getRange(j,11).setNumberFormat('[mm]').setValues(vo2max);
+          var seki=tZVO2max.getRange(j,12).setNumberFormat('ss').setValues(vo2max);
+
+          var s2=tZVO2max.getRange(j,10).getDisplayValues();
+          var m2=tZVO2max.getRange(j,11).getDisplayValues();
+          var ss2=tZVO2max.getRange(j,12).getDisplayValues();
+
+        var satvo2max=s2*60*60;
+        var minvo2max=(m2)*60;
+        var ukupnovo2max=parseInt(satvo2max)+parseInt(minvo2max)+parseInt(ss2);
+    
+         if(Math.abs(ukupno-ukupnovo2max)<minrazlikasekunde)
+        {
+            minrazlikasekunde=Math.abs(ukupno-ukupnovo2max);
+            brojacOznaka=i;
+        }
+         if(Math.abs(ukupno-ukupnovo2max)==minrazlikasekunde)
+        {
+            minrazlikasekunde=Math.abs(ukupno-ukupnovo2max);
+            brojacOznaka=i;
+        }
+
+          
+            var vo2vrednost=trenutnivo2max.getRange(brojacOznaka,1).getValues();
+              var vo2maxtren=tZVO2max.getRange(j,1).setValue(vo2vrednost);
+              var inter=intervalitempo.getRange(brojacOznaka+1,10).getValues();
+              var te=intervalitempo.getRange(brojacOznaka+1,12).getValues();
+              
+              var treninterval=tZVO2max.getRange(j,5).setNumberFormat('hh:mm:ss').setValue(inter);
+              var trentempo=tZVO2max.getRange(j,3).setNumberFormat('hh:mm:ss').setValue(te);
+        }
+          var novo=tZVO2max.getRange(j,14).setValue("Done");
+        
+      
+        }
+      }
+      }
+      }
+ 
+      
+function trenutniVO2max21kNOVO()
+{
+   var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  var upitnik = ss.getSheetByName("UpitnikKlijenti");
+  var trenutnivo2max = ss.getSheetByName("VO2maxRezultati");
+  var intervalitempo = ss.getSheetByName("IntenzitetTreningaVO2max");
+  var tZVO2max=ss.getSheetByName("Trenutni i zeljeni VO2max-21k");
+
+  var lastRow = upitnik.getLastRow();
+  var lastRowvo2 = trenutnivo2max.getLastRow();
+  var lastRowvo3 = intervalitempo.getLastRow();
+
+  var brojacOznaka=2;
+  for(var j = 2; j<=lastRow; j++)
+  {
+   var ime=upitnik.getRange(j, 3).getValues();
+   var korisnik=tZVO2max.getRange(j, 13).setValues(ime);
+
+
+if(tZVO2max.getRange(j, 14).getValue()!="Done")
+{
+   var minrazlikasekunde=1000;
+    var tren5k=upitnik.getRange(j,17).getDisplayValues();
+    var satk=tZVO2max.getRange(j,7).setNumberFormat('hh').setValues(tren5k);
+    var mink=tZVO2max.getRange(j,8).setNumberFormat('[mm]').setValues(tren5k);
+    var sekk=tZVO2max.getRange(j,9).setNumberFormat('ss').setValues(tren5k);
+
+    var s1=tZVO2max.getRange(j,7).getDisplayValues();
+    var m1=tZVO2max.getRange(j,8).getDisplayValues();
+    var ss1=tZVO2max.getRange(j,9).getDisplayValues();
+    
+   var sat=s1*60*60;
+   var min=(m1)*60;
+   //test za minute
+   //var min1=min/60;
+   var ukupno=parseInt(sat)+parseInt(min)+parseInt(ss1);
+
+    if(tren5k=="")
+            {
+              var nn=0;
+              var vo2maxtren=tZVO2max.getRange(j,1).setValue(nn);
+              var treninterval=tZVO2max.getRange(j,5).setValue(nn);
+              var trentempo=tZVO2max.getRange(j,3).setValue(nn);
+              var novo=tZVO2max.getRange(j,14).setValue("Done");
+            }
+            else
+            {
+      for(var i=2;i<=lastRowvo2;i++)
+      {
+          var vo2max=trenutnivo2max.getRange(i,6).getDisplayValues();
+          var sati=tZVO2max.getRange(j,10).setNumberFormat('hh').setValues(vo2max);
+          var mini=tZVO2max.getRange(j,11).setNumberFormat('[mm]').setValues(vo2max);
+          var seki=tZVO2max.getRange(j,12).setNumberFormat('ss').setValues(vo2max);
+
+          var s2=tZVO2max.getRange(j,10).getDisplayValues();
+          var m2=tZVO2max.getRange(j,11).getDisplayValues();
+          var ss2=tZVO2max.getRange(j,12).getDisplayValues();
+
+        var satvo2max=s2*60*60;
+        var minvo2max=(m2)*60;
+        var ukupnovo2max=parseInt(satvo2max)+parseInt(minvo2max)+parseInt(ss2);
+    
+         if(Math.abs(ukupno-ukupnovo2max)<minrazlikasekunde)
+        {
+            minrazlikasekunde=Math.abs(ukupno-ukupnovo2max);
+            brojacOznaka=i;
+        }
+         if(Math.abs(ukupno-ukupnovo2max)==minrazlikasekunde)
+        {
+            minrazlikasekunde=Math.abs(ukupno-ukupnovo2max);
+            brojacOznaka=i;
+        }
+
+          
+            var vo2vrednost=trenutnivo2max.getRange(brojacOznaka,1).getValues();
+              var vo2maxtren=tZVO2max.getRange(j,1).setValue(vo2vrednost);
+              var inter=intervalitempo.getRange(brojacOznaka+1,10).getValues();
+              var te=intervalitempo.getRange(brojacOznaka+1,12).getValues();
+              
+              var treninterval=tZVO2max.getRange(j,5).setNumberFormat('hh:mm:ss').setValue(inter);
+              var trentempo=tZVO2max.getRange(j,3).setNumberFormat('hh:mm:ss').setValue(te);
+        }
+          var novo=tZVO2max.getRange(j,14).setValue("Done");
+        
+      
+        }
+      }
+      }
+      }
+ 
+      
+function trenutniVO2max42kNOVO()
+{
+ 
+   var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  var upitnik = ss.getSheetByName("UpitnikKlijenti");
+  var trenutnivo2max = ss.getSheetByName("VO2maxRezultati");
+  var intervalitempo = ss.getSheetByName("IntenzitetTreningaVO2max");
+  var tZVO2max=ss.getSheetByName("Trenutni i zeljeni VO2max-42k");
+
+  var lastRow = upitnik.getLastRow();
+  var lastRowvo2 = trenutnivo2max.getLastRow();
+  var lastRowvo3 = intervalitempo.getLastRow();
+
+  var brojacOznaka=2;
+  for(var j = 2; j<=lastRow; j++)
+  {
+   var ime=upitnik.getRange(j, 3).getValues();
+   var korisnik=tZVO2max.getRange(j, 13).setValues(ime);
+
+
+if(tZVO2max.getRange(j, 14).getValue()!="Done")
+{
+   var minrazlikasekunde=1000;
+    var tren5k=upitnik.getRange(j,18).getDisplayValues();
+    var satk=tZVO2max.getRange(j,7).setNumberFormat('hh').setValues(tren5k);
+    var mink=tZVO2max.getRange(j,8).setNumberFormat('[mm]').setValues(tren5k);
+    var sekk=tZVO2max.getRange(j,9).setNumberFormat('ss').setValues(tren5k);
+
+    var s1=tZVO2max.getRange(j,7).getDisplayValues();
+    var m1=tZVO2max.getRange(j,8).getDisplayValues();
+    var ss1=tZVO2max.getRange(j,9).getDisplayValues();
+    
+   var sat=s1*60*60;
+   var min=(m1)*60;
+   //test za minute
+   //var min1=min/60;
+   var ukupno=parseInt(sat)+parseInt(min)+parseInt(ss1);
+
+    if(tren5k=="")
+            {
+              var nn=0;
+              var vo2maxtren=tZVO2max.getRange(j,1).setValue(nn);
+              var treninterval=tZVO2max.getRange(j,5).setValue(nn);
+              var trentempo=tZVO2max.getRange(j,3).setValue(nn);
+              var novo=tZVO2max.getRange(j,14).setValue("Done");
+            }
+            else
+            {
+      for(var i=2;i<=lastRowvo2;i++)
+      {
+          var vo2max=trenutnivo2max.getRange(i,7).getDisplayValues();
+          var sati=tZVO2max.getRange(j,10).setNumberFormat('hh').setValues(vo2max);
+          var mini=tZVO2max.getRange(j,11).setNumberFormat('[mm]').setValues(vo2max);
+          var seki=tZVO2max.getRange(j,12).setNumberFormat('ss').setValues(vo2max);
+
+          var s2=tZVO2max.getRange(j,10).getDisplayValues();
+          var m2=tZVO2max.getRange(j,11).getDisplayValues();
+          var ss2=tZVO2max.getRange(j,12).getDisplayValues();
+
+        var satvo2max=s2*60*60;
+        var minvo2max=(m2)*60;
+        var ukupnovo2max=parseInt(satvo2max)+parseInt(minvo2max)+parseInt(ss2);
+    
+         if(Math.abs(ukupno-ukupnovo2max)<minrazlikasekunde)
+        {
+            minrazlikasekunde=Math.abs(ukupno-ukupnovo2max);
+            brojacOznaka=i;
+        }
+         if(Math.abs(ukupno-ukupnovo2max)==minrazlikasekunde)
+        {
+            minrazlikasekunde=Math.abs(ukupno-ukupnovo2max);
+            brojacOznaka=i;
+        }
+
+          
+            var vo2vrednost=trenutnivo2max.getRange(brojacOznaka,1).getValues();
+              var vo2maxtren=tZVO2max.getRange(j,1).setValue(vo2vrednost);
+              var inter=intervalitempo.getRange(brojacOznaka+1,10).getValues();
+              var te=intervalitempo.getRange(brojacOznaka+1,12).getValues();
+              
+              var treninterval=tZVO2max.getRange(j,5).setNumberFormat('hh:mm:ss').setValue(inter);
+              var trentempo=tZVO2max.getRange(j,3).setNumberFormat('hh:mm:ss').setValue(te);
+        }
+          var novo=tZVO2max.getRange(j,14).setValue("Done");
+        
+      
+        }
+      }
+      }
+      }
+
+function zeljeniVO2max5k()
+{
+   var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  var intervalitempo = ss.getSheetByName("IntenzitetTreningaVO2max");
+  var tZVO2max=ss.getSheetByName("Trenutni i zeljeni VO2max-5k");
+
+  var lastRow = tZVO2max.getLastRow();
+  var lastinter=intervalitempo.getLastRow();
+  for(var j=2;j<=lastRow;j++)
+  {
+    var a=tZVO2max.getRange(j,1).getValue();
+    var zeljeniii=tZVO2max.getRange(j,2).setValue(a+2);
+    var zeljeniuneti=tZVO2max.getRange(j,2).getValue();
+ for(var i=2;i<=lastinter;i++)
+  {
+    var vovmaxzeljeno=intervalitempo.getRange(i,1).getValue();
+    if(zeljeniuneti==vovmaxzeljeno)
+    {
+              var inter=intervalitempo.getRange(i,10).getValue();
+              var te=intervalitempo.getRange(i,12).getValue();
+              
+              var treninterval=tZVO2max.getRange(j,4).setNumberFormat('hh:mm:ss').setValue(inter);
+              var trentempo=tZVO2max.getRange(j,6).setNumberFormat('hh:mm:ss').setValue(te);
+    }
+  }
+  }
+  }
+
+function zeljeniVO2max10k()
+{
+   var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  var intervalitempo = ss.getSheetByName("IntenzitetTreningaVO2max");
+  var tZVO2max=ss.getSheetByName("Trenutni i zeljeni VO2max-10k");
+
+  var lastRow = tZVO2max.getLastRow();
+  var lastinter=intervalitempo.getLastRow();
+  for(var j=2;j<=lastRow;j++)
+  {
+    var a=tZVO2max.getRange(j,1).getValue();
+    var zeljeniii=tZVO2max.getRange(j,2).setValue(a+2);
+    var zeljeniuneti=tZVO2max.getRange(j,2).getValue();
+ for(var i=2;i<=lastinter;i++)
+  {
+    var vovmaxzeljeno=intervalitempo.getRange(i,1).getValue();
+    if(zeljeniuneti==vovmaxzeljeno)
+    {
+              var inter=intervalitempo.getRange(i,10).getValue();
+              var te=intervalitempo.getRange(i,12).getValue();
+              
+              var treninterval=tZVO2max.getRange(j,4).setNumberFormat('hh:mm:ss').setValue(inter);
+              var trentempo=tZVO2max.getRange(j,6).setNumberFormat('hh:mm:ss').setValue(te);
+    }
+  }
+  }
+  }
+
+  function zeljeniVO2max21k()
+{
+   var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  var intervalitempo = ss.getSheetByName("IntenzitetTreningaVO2max");
+  var tZVO2max=ss.getSheetByName("Trenutni i zeljeni VO2max-21k");
+
+  var lastRow = tZVO2max.getLastRow();
+  var lastinter=intervalitempo.getLastRow();
+  for(var j=2;j<=lastRow;j++)
+  {
+    var a=tZVO2max.getRange(j,1).getValue();
+    var zeljeniii=tZVO2max.getRange(j,2).setValue(a+2);
+    var zeljeniuneti=tZVO2max.getRange(j,2).getValue();
+ for(var i=2;i<=lastinter;i++)
+  {
+    var vovmaxzeljeno=intervalitempo.getRange(i,1).getValue();
+    if(zeljeniuneti==vovmaxzeljeno)
+    {
+              var inter=intervalitempo.getRange(i,10).getValue();
+              var te=intervalitempo.getRange(i,12).getValue();
+              
+              var treninterval=tZVO2max.getRange(j,4).setNumberFormat('hh:mm:ss').setValue(inter);
+              var trentempo=tZVO2max.getRange(j,6).setNumberFormat('hh:mm:ss').setValue(te);
+    }
+  }
+  }
+  }
+
+ function zeljeniVO2max42k()
+{
+   var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  var intervalitempo = ss.getSheetByName("IntenzitetTreningaVO2max");
+  var tZVO2max=ss.getSheetByName("Trenutni i zeljeni VO2max-42k");
+
+  var lastRow = tZVO2max.getLastRow();
+  var lastinter=intervalitempo.getLastRow();
+  for(var j=2;j<=lastRow;j++)
+  {
+    var a=tZVO2max.getRange(j,1).getValue();
+    var zeljeniii=tZVO2max.getRange(j,2).setValue(a+2);
+    var zeljeniuneti=tZVO2max.getRange(j,2).getValue();
+ for(var i=2;i<=lastinter;i++)
+  {
+    var vovmaxzeljeno=intervalitempo.getRange(i,1).getValue();
+    if(zeljeniuneti==vovmaxzeljeno)
+    {
+              var inter=intervalitempo.getRange(i,10).getValue();
+              var te=intervalitempo.getRange(i,12).getValue();
+              
+              var treninterval=tZVO2max.getRange(j,4).setNumberFormat('hh:mm:ss').setValue(inter);
+              var trentempo=tZVO2max.getRange(j,6).setNumberFormat('hh:mm:ss').setValue(te);
+    }
+  }
+  }
+  }
+//generisanje foldera i fajlova u folderu 'Klijenti' na osnovu upitnika
+//i importovanje vrednosti iz sheet-a Generator Treninga Forma(generise ga automatski Google Forma)
+//u sheet UpitnikKlijenti
+//kreira se automatski preko TEMPLATE-a za svakog klijenta posebno rapsored vezbi po nedeljama,
+//klijent dobija automatski dve default-ne nedelje sa automatski generisanim datumima,
+//klijent krece sa treningom prvom sledeceg ponedeljka u odnosu na datum registracije
+function importujSaUpitnika() 
+{
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  var upitnik = ss.getSheetByName("UpitnikKlijenti");
+  var forma = ss.getSheetByName("GeneratorTreningaForma");
+  var tren5k=ss.getSheetByName("Trenutni i zeljeni VO2max-5k");
+  var folderName='';
+  var lastRow = forma.getLastRow()+1;
+
+  for(var j = 2; j<=lastRow; j++)
+  {
+   if(forma.getRange(j,2).getValue() !== upitnik.getRange(j,2).getValue())
+    {
+      var nextRow = upitnik.getLastRow() + 1;
+      var getCopyRange = forma.getRange('A' + j + ':AG'+j);
+      getCopyRange.copyTo(upitnik.getRange(nextRow, 1));
+     var id=upitnik.getRange(j,2).getValue();
+     var naziv=upitnik.getRange(j,3).getValue();
+     var folderName = id + " " + naziv;
+     upitnik.getRange(j, 36).setValue(folderName);
+     var parentFolder = DriveApp.getFolderById("14AoWZooUfO_4xrtk5InGKn7X3f1WaQy8").createFolder(folderName);
+     var fileName= id+" "+naziv;
+    
+    
+var SStocopy = SpreadsheetApp.openByUrl("https://docs.google.com/spreadsheets/d/1FjgJ774dPPSJRxaX-2PdrHsrmg2CO_D9GK4-HZ3mPM0/edit#gid=0"); 
+//setovanje destination foldera
+var SSdestFolder = DriveApp.getFolderById('14AoWZooUfO_4xrtk5InGKn7X3f1WaQy8');
+//kopiranje templejta na konacnu destinaciju
+var newFile = DriveApp.getFileById(SStocopy.getId()).makeCopy(fileName, SSdestFolder);
+//otvaranje novog fajla
+var ss = SpreadsheetApp.openById(newFile.getId());
+ DriveApp.getFolderById(ss.getId()).moveTo(parentFolder);
+    //kreiranje inicijalnog fajla u folderu Klijenta
+  var sheet = ss.getSheetByName("Treninzi");
+
+  // Postavljamo zeljene nazive polja u zaglavlju
+  var values = [
+    ["Datum", "Dan", "TIME", "CILJ km","CILJ pace (min/km)","Trening","Comment","ACHIEVED km", "ACHIEVED pace (min/km)"]];
+   
+  // Postavljamo opseg polja, broj polja mora da se slaze sa brojem parametara
+  var range = sheet.getRange("A1:I1");
+
+  //Pozivamo setValues metodu na opseg koji smo postavili i prosledjujemo nase vrednosti
+  range.setValues(values);
+  range.setBackground('#3CB372');
+  range.setFontWeight('Bold');
+  
+ var lastRow = upitnik.getLastRow();
+     
+  //uzimamo vrednosti iz sheet-a Upitnik klijenti za ime i prezime, e-mail i za dane koje je odabrao klijent za trening kako bi posle to iskoristili u sledecoj funkciji
+  //koja ce da boji dane koje je odabrao klijent i da boji te dane kako bi admin u tim poljima uneo vezbe i treninge
+    var odabraniDani=upitnik.getRange(j,25).getValue();
+    sheet.getRange(1,15).setValue(odabraniDani);
+    
+    var imeprezime=upitnik.getRange(j,3).getValues();
+    sheet.getRange(1,16).setValue(imeprezime);
+
+    var mail=upitnik.getRange(j,5).getValues();
+    sheet.getRange(1,17).setValue(mail);
+ 
+ 
+    //datum rodjenja
+    var datumRodj=upitnik.getRange(j, 7).getValues();
+ 
+//datum registracije-na osnovu njega se vrse dalja proracunavanja
+     var datumReg=upitnik.getRange(j, 1).getValues();
+    // @ts-ignore
+    var d= new Date(datumReg);
+    var day = d.getDay('dd');
+    var month = d.getMonth('MM');
+    var year = d.getFullYear('yy');
+
+   var tz = ss.getSpreadsheetTimeZone();
+ var c=7;
+ var e=6;
+ var f=5;
+ var m=4;
+ var n=3;
+ var l=2;
+ var s=1;
+
+ //ove vrednosti su hardkodirane
+ //u Template fajlu su vec upisani dani po nedeljama u sheet-u 'Treninzi'
+ //u drugom sheet-u 'Uplate po mesecima' su dati meseci i uplate, tu se vrsi provera uplata klijenta
+for(var b=3;b<=9;b++)
+{
+    if(day==1)
+    {
+
+         var nextDate1 = new Date(d.getTime()+c*3600000*24);
+         var pocetakTreninga=sheet.getRange(b,1).setValue(nextDate1);
+         c++;
+        
+   }
+    if(day==2)
+    {
+        
+         var nextDate1 = new Date(d.getTime()+e*3600000*24);
+         var pocetakTreninga=sheet.getRange(b,1).setValue(nextDate1);
+         e++;  
+   } 
+
+   if(day==3)
+    {
+        
+         var nextDate1 = new Date(d.getTime()+f*3600000*24);
+         var pocetakTreninga=sheet.getRange(b,1).setValue(nextDate1);
+         f++;
+        
+   } 
+   if(day==4)
+    {
+         var nextDate1 = new Date(d.getTime()+m*3600000*24);
+         var pocetakTreninga=sheet.getRange(b,1).setValue(nextDate1);
+         m++;
+       
+   } 
+   if(day==5)
+    {
+       
+         var nextDate1 = new Date(d.getTime()+n*3600000*24);
+         var pocetakTreninga=sheet.getRange(b,1).setValue(nextDate1);
+         n++;
+ 
+   } 
+   if(day==6)
+    {
+         var nextDate1 = new Date(d.getTime()+l*3600000*24);
+         var pocetakTreninga=sheet.getRange(b,1).setValue(nextDate1);
+         l++; 
+   } 
+   if(day==0)
+    {   
+         var nextDate1 = new Date(d.getTime()+s*3600000*24);
+         var pocetakTreninga=sheet.getRange(b,1).setValue(nextDate1);
+         s++;
+       
+   } 
+   }
+    }
+  }
+}
